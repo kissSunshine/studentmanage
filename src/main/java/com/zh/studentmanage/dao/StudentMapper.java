@@ -1,12 +1,10 @@
 package com.zh.studentmanage.dao;
 
 import com.zh.studentmanage.pojo.Student;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@Mapper
 public interface StudentMapper {
 
     /**
@@ -18,21 +16,12 @@ public interface StudentMapper {
     Student queryById(String id);
 
     /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit  查询条数
-     * @return 对象列表
-     */
-    List<Student> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
-    /**
      * 通过实体作为筛选条件查询
      *
      * @param student 实例对象
      * @return 对象列表
      */
-    List<Student> queryAll(Student student);
+    List<Student> queryByParam(Student student);
 
     /**
      * 新增数据
@@ -73,5 +62,14 @@ public interface StudentMapper {
      * @return 影响行数
      */
     int deleteById(String id);
+
+    /**
+     * 变更学生状态
+     * 0-离校；1-在校
+     * @param id 学号
+     * @param status 状态
+     * @return
+     */
+    int changeStatusById(@Param("id") String id,@Param("status")Integer status);
 
 }

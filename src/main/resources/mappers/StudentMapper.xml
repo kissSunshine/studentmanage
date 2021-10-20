@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.studentmanage.dao.StudentMapper">
+
+    <resultMap type="com.zh.studentmanage.pojo.Student" id="StudentMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="DATE"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="idcard" column="idCard" jdbcType="VARCHAR"/>
+        <result property="schoolid" column="schoolid" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="homeaddress" column="homeAddress" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StudentMap">
+        select id,
+               name,
+               nickname,
+               password,
+               birthday,
+               gender,
+               idCard,
+               schoolid,
+               phone,
+               homeAddress,
+               status,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.student
+        where id = #{id}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByParam" resultMap="StudentMap">
+        select
+        id, name, nickname, password, birthday, gender, idCard, schoolid, phone, homeAddress, status, created_time,
+        updated_time, updated_person
+        from studentmanage.student
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname = #{nickname}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                and idCard = #{idcard}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="homeaddress != null and homeaddress != ''">
+                and homeAddress = #{homeaddress}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+                                          homeAddress, status, created_time, updated_time, updated_person)
+        values (#{name}, #{nickname}, #{password}, #{birthday}, #{gender}, #{idcard}, #{schoolid}, #{phone},
+                #{homeaddress}, #{status}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+        homeAddress, status, created_time, updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
+            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.status},
+            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+        homeAddress, status, created_time, updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
+            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.status},
+            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+        on duplicate key update
+        name = values(name) , nickname = values(nickname) , password = values(password) , birthday = values(birthday) ,
+        gender = values(gender) , idCard = values(idCard) , schoolid = values(schoolid) , phone = values(phone) ,
+        homeAddress = values(homeAddress) , status = values(status) , created_time = values(created_time) , updated_time
+        = values(updated_time) , updated_person = values(updated_person)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update studentmanage.student
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="idcard != null and idcard != ''">
+                idCard = #{idcard},
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                schoolid = #{schoolid},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="homeaddress != null and homeaddress != ''">
+                homeAddress = #{homeaddress},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                updated_person = #{updatedPerson},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from studentmanage.student
+        where id = #{id}
+    </delete>
+
+    <!--变更学生状态-->
+    <delete id="changeStatusById">
+        update studentmanage.student
+        set status = #{status}
+        where id = #{id}
+    </delete>
+
+</mapper>
+

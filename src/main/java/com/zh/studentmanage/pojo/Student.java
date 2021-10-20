@@ -1,7 +1,10 @@
 package com.zh.studentmanage.pojo;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class Student {
 
     /**
