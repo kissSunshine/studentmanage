@@ -27,10 +27,8 @@ public class StudentServiceImpl implements StudentService {
         //1、非空校验放在Controller中
 
         //2、唯一校验
-        Student studentCheck = new Student();
-        studentCheck.setNickname(student.getNickname());
-        List<Student> studentListCheck = studentMapper.queryByParam(studentCheck);
-        if(studentListCheck != null){
+        Student studentCheck = studentMapper.queryByNickname(student.getNickname());
+        if(studentCheck != null){
             return ResponseVo.error("昵称已注册，请修改！");
         }
 
