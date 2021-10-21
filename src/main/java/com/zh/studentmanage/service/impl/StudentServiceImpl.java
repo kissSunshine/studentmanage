@@ -86,4 +86,21 @@ public class StudentServiceImpl implements StudentService {
         return ResponseVo.success("查询成功",studentList);
     }
 
+    @Override
+    public ResponseVo login(String nickname, String paassword) {
+        Student student = studentMapper.queryByNickname(nickname);
+        if(student == null){
+            return ResponseVo.error("用户名或密码错误！");
+        }
+
+        //将输入密码转为MD5格式
+        String passwordMD5 = DigestUtils.md5DigestAsHex(paassword.getBytes(StandardCharsets.UTF_8));
+        if(!student.getPassword().equals(passwordMD5)){
+            return ResponseVo.error("用户名或密码错误！");
+        }
+
+        return ResponseVo.success("用户名或密码错误！",student);
+    }
+
+
 }

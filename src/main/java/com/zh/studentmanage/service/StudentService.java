@@ -59,4 +59,11 @@ public interface StudentService {
      */
     ResponseVo queryByParam(Student student);
 
+    /**
+     * 登录
+     * @param nickname 昵称
+     * @param paassword 密码
+     * @return
+     */
+    ResponseVo login(String nickname,String paassword);
 }

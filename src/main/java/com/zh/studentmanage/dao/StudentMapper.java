@@ -72,4 +72,12 @@ public interface StudentMapper {
      */
     int changeStatusById(@Param("id") String id,@Param("status")Integer status);
 
+    /**
+     * 通过昵称查询单条数据
+     *
+     * @param nickname 昵称
+     * @return 实例对象
+     */
+    Student queryByNickname(String nickname);
+
 }

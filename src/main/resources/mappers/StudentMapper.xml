@@ -187,5 +187,25 @@
         where id = #{id}
     </delete>
 
+    <!--通过昵称查询单条数据-->
+    <select id="queryByNickname" resultMap="StudentMap">
+        select id,
+               name,
+               nickname,
+               password,
+               birthday,
+               gender,
+               idCard,
+               schoolid,
+               phone,
+               homeAddress,
+               status,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.student
+        where nickname = #{nickname}
+    </select>
+
 </mapper>
 

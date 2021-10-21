@@ -33,6 +33,10 @@ public class ResponseVo<T> {
         return new ResponseVo(1, msg, studentList);
     }
 
+    public static <T> ResponseVo<T> success(String msg,Student student) {
+        return new ResponseVo(1, msg, student);
+    }
+
     public static <T> ResponseVo<T> error(String msg) {
         return new ResponseVo(0,msg);
     }
