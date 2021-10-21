@@ -26,7 +26,15 @@ public class StudentServiceImpl implements StudentService {
     public ResponseVo insert(Student student) {
         //1、非空校验放在Controller中
 
-        //2、密码转为MD5加密
+        //2、唯一校验
+        Student studentCheck = new Student();
+        studentCheck.setNickname(student.getNickname());
+        List<Student> studentListCheck = studentMapper.queryByParam(studentCheck);
+        if(studentListCheck != null){
+            return ResponseVo.error("昵称已注册，请修改！");
+        }
+
+        //3、密码转为MD5加密
         //MD5摘要算法(Spring自带)
         student.setPassword(DigestUtils.md5DigestAsHex(student.getPassword().getBytes(StandardCharsets.UTF_8)));
 
@@ -77,4 +85,5 @@ public class StudentServiceImpl implements StudentService {
 
         return ResponseVo.success("查询成功",studentList);
     }
+
 }
