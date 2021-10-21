@@ -1,6 +1,7 @@
 package com.zh.studentmanage.service;
 
 import com.zh.studentmanage.pojo.Student;
+import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.vo.ResponseVo;
 
 /**
@@ -61,9 +62,8 @@ public interface StudentService {
 
     /**
      * 登录
-     * @param nickname 昵称
-     * @param paassword 密码
+     * @param user 用户
      * @return
      */
-    ResponseVo login(String nickname,String paassword);
+    ResponseVo login(User user);
 }

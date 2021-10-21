@@ -2,6 +2,7 @@ package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.StudentMapper;
 import com.zh.studentmanage.pojo.Student;
+import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.StudentService;
 import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.stereotype.Service;
@@ -85,19 +86,19 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo login(String nickname, String paassword) {
-        Student student = studentMapper.queryByNickname(nickname);
+    public ResponseVo login(User user) {
+        Student student = studentMapper.queryByNickname(user.getNickname());
         if(student == null){
             return ResponseVo.error("用户名或密码错误！");
         }
 
         //将输入密码转为MD5格式
-        String passwordMD5 = DigestUtils.md5DigestAsHex(paassword.getBytes(StandardCharsets.UTF_8));
+        String passwordMD5 = DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8));
         if(!student.getPassword().equals(passwordMD5)){
             return ResponseVo.error("用户名或密码错误！");
         }
 
-        return ResponseVo.success("用户名或密码错误！",student);
+        return ResponseVo.success("登录成功！",student);
     }
 
 
