@@ -8,8 +8,8 @@ public enum genderEnum {
     WOMAN(0, "女")
     ;
 
-    private Integer code;
-    private String gender;
+    private final Integer code;
+    private final String gender;
 
     genderEnum(Integer code, String gender) {
         this.code = code;
