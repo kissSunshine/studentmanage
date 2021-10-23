@@ -46,7 +46,7 @@ public class StudentMapperTest {
     @Test
     public void queryByNickname() {
         Student student = studentMapper.queryByNickname("帅帅");
-        System.out.printf(String.valueOf(student));
+        System.out.print(student);
 
     }
 }

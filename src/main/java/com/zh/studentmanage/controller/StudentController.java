@@ -20,4 +20,9 @@ public class StudentController {
         return studentService.insert(student);
     }
 
+    @PostMapping("/query")
+    public ResponseVo query(@RequestBody Student student) {
+        return studentService.queryByParam(student);
+    }
+
 }
