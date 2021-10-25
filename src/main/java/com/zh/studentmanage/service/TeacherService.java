@@ -1,6 +1,9 @@
 package com.zh.studentmanage.service;
 
 import com.zh.studentmanage.pojo.Teacher;
+import com.zh.studentmanage.pojo.User;
+import com.zh.studentmanage.vo.ResponseVo;
+
 import java.util.List;
 
 /**
@@ -25,7 +28,7 @@ public interface TeacherService {
      * @param teacher 实例对象
      * @return 实例对象
      */
-    Teacher insert(Teacher teacher);
+    ResponseVo insert(Teacher teacher);
 
     /**
      * 修改数据
@@ -33,7 +36,7 @@ public interface TeacherService {
      * @param teacher 实例对象
      * @return 实例对象
      */
-    Teacher update(Teacher teacher);
+    ResponseVo update(Teacher teacher);
 
     /**
      * 通过主键删除数据
@@ -41,6 +44,29 @@ public interface TeacherService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(String id);
+    ResponseVo deleteById(String id);
+
+    /**
+     * 变更教师状态
+     * 0-离校；1-在校
+     * @param id 教师编号
+     * @param status 状态
+     * @return
+     */
+    ResponseVo changeStatusById(String id,Integer status);
+
+    /**
+     * 通过重要因素查询
+     * @param teacher 学生信息
+     * @return
+     */
+    ResponseVo queryByParam(Teacher teacher);
+
+    /**
+     * 登录
+     * @param user 用户
+     * @return
+     */
+    ResponseVo login(User user);
 
 }

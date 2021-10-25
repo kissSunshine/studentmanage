@@ -20,13 +20,13 @@ public class Teacher implements Serializable {
      */
     private String nickname;
     /**
-     * 6-20位，MD5加密
+     * 加密前6-20位，MD5加密
      */
     private String password;
     /**
      * 形如：2021-10-01
      */
-    private Date birthday;
+    private String birthday;
     /**
      * 0-女；1-男
      */
@@ -48,15 +48,15 @@ public class Teacher implements Serializable {
      */
     private String homeaddress;
     /**
-     * 教授学科
+     * 教授学科  2位数字编码
      */
     private String subject;
     /**
-     * 所属部门
+     * 所属部门  2位数字编码
      */
     private String department;
     /**
-     * 职位
+     * 职位  2位数字编码
      */
     private String position;
     /**
