@@ -93,9 +93,9 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+        insert into studentmanage.student(id,name, nickname, password, birthday, gender, idCard, schoolid, phone,
                                           homeAddress, status, created_time, updated_time, updated_person)
-        values (#{name}, #{nickname}, #{password}, #{birthday}, #{gender}, #{idcard}, #{schoolid}, #{phone},
+        values (#{id},#{name}, #{nickname}, #{password}, #{birthday}, #{gender}, #{idcard}, #{schoolid}, #{phone},
                 #{homeaddress}, #{status}, #{createdTime}, #{updatedTime}, #{updatedPerson})
     </insert>
 

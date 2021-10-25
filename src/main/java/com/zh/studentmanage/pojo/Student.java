@@ -20,7 +20,7 @@ public class Student {
      */
     private String nickname;
     /**
-     * 6-20位，MD5加密
+     * 加密前6-20位，MD5加密
      */
     private String password;
     /**

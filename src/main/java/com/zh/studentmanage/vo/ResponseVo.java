@@ -29,12 +29,12 @@ public class ResponseVo<T> {
         return new ResponseVo(1,msg);
     }
 
-    public static <T> ResponseVo<T> success(String msg,List<Student> studentList) {
-        return new ResponseVo(1, msg, studentList);
+    public static <T> ResponseVo<T> success(String msg,List<T> List) {
+        return new ResponseVo(1, msg, List);
     }
 
-    public static <T> ResponseVo<T> success(String msg,Student student) {
-        return new ResponseVo(1, msg, student);
+    public static <T> ResponseVo<T> success(String msg,Object object) {
+        return new ResponseVo(1, msg, object);
     }
 
     public static <T> ResponseVo<T> error(String msg) {
