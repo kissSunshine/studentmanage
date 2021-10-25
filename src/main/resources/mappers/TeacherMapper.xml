@@ -7,7 +7,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
-        <result property="birthday" column="birthday" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="CHAR"/>
         <result property="gender" column="gender" jdbcType="TINYINT"/>
         <result property="idcard" column="idCard" jdbcType="VARCHAR"/>
         <result property="schoolid" column="schoolid" jdbcType="VARCHAR"/>

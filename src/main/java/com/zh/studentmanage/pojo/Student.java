@@ -26,7 +26,7 @@ public class Student {
     /**
      * 形如：2021-10-01
      */
-    private Date birthday;
+    private String birthday;
     /**
      * 0-女；1-男
      */
