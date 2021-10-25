@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zh.studentmanage.dao.StudentMapper">
+<mapper namespace="com.zh.studentmanage.dao.TeacherMapper">
 
-    <resultMap type="com.zh.studentmanage.pojo.Student" id="StudentMap">
+    <resultMap type="com.zh.studentmanage.pojo.Teacher" id="TeacherMap">
         <result property="id" column="id" jdbcType="VARCHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
@@ -13,6 +13,9 @@
         <result property="schoolid" column="schoolid" jdbcType="VARCHAR"/>
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="homeaddress" column="homeAddress" jdbcType="VARCHAR"/>
+        <result property="subject" column="subject" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
         <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
@@ -20,7 +23,7 @@
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="StudentMap">
+    <select id="queryById" resultMap="TeacherMap">
         select id,
                name,
                nickname,
@@ -31,20 +34,23 @@
                schoolid,
                phone,
                homeAddress,
+               subject,
+               department,
+               position,
                status,
                created_time,
                updated_time,
                updated_person
-        from studentmanage.student
+        from studentmanage.teacher
         where id = #{id}
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryByParam" resultMap="StudentMap">
+    <select id="queryByParam" resultMap="TeacherMap">
         select
-        id, name, nickname, password, birthday, gender, idCard, schoolid, phone, homeAddress, status, created_time,
-        updated_time, updated_person
-        from studentmanage.student
+        id, name, nickname, password, birthday, gender, idCard, schoolid, phone, homeAddress, subject, department,
+        position, status, created_time, updated_time, updated_person
+        from studentmanage.teacher
         <where>
             <if test="id != null and id != ''">
                 and id = #{id}
@@ -76,6 +82,15 @@
             <if test="homeaddress != null and homeaddress != ''">
                 and homeAddress = #{homeaddress}
             </if>
+            <if test="subject != null and subject != ''">
+                and subject = #{subject}
+            </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
+            </if>
+            <if test="position != null and position != ''">
+                and position = #{position}
+            </if>
             <if test="status != null">
                 and status = #{status}
             </if>
@@ -93,42 +108,47 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
-                                          homeAddress, status, created_time, updated_time, updated_person)
+        insert into studentmanage.teacher(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+                                          homeAddress, subject, department, position, status, created_time,
+                                          updated_time, updated_person)
         values (#{name}, #{nickname}, #{password}, #{birthday}, #{gender}, #{idcard}, #{schoolid}, #{phone},
-                #{homeaddress}, #{status}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+                #{homeaddress}, #{subject}, #{department}, #{position}, #{status}, #{createdTime}, #{updatedTime},
+                #{updatedPerson})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
-        homeAddress, status, created_time, updated_time, updated_person)
+        insert into studentmanage.teacher(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+        homeAddress, subject, department, position, status, created_time, updated_time, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
-            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.status},
-            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.subject},
+            #{entity.department}, #{entity.position}, #{entity.status}, #{entity.createdTime}, #{entity.updatedTime},
+            #{entity.updatedPerson})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
-        homeAddress, status, created_time, updated_time, updated_person)
+        insert into studentmanage.teacher(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+        homeAddress, subject, department, position, status, created_time, updated_time, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
-            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.status},
-            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+            #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.subject},
+            #{entity.department}, #{entity.position}, #{entity.status}, #{entity.createdTime}, #{entity.updatedTime},
+            #{entity.updatedPerson})
         </foreach>
         on duplicate key update
         name = values(name) , nickname = values(nickname) , password = values(password) , birthday = values(birthday) ,
         gender = values(gender) , idCard = values(idCard) , schoolid = values(schoolid) , phone = values(phone) ,
-        homeAddress = values(homeAddress) , status = values(status) , created_time = values(created_time) , updated_time
-        = values(updated_time) , updated_person = values(updated_person)
+        homeAddress = values(homeAddress) , subject = values(subject) , department = values(department) , position =
+        values(position) , status = values(status) , created_time = values(created_time) , updated_time =
+        values(updated_time) , updated_person = values(updated_person)
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
-        update studentmanage.student
+        update studentmanage.teacher
         <set>
             <if test="name != null and name != ''">
                 name = #{name},
@@ -157,6 +177,15 @@
             <if test="homeaddress != null and homeaddress != ''">
                 homeAddress = #{homeaddress},
             </if>
+            <if test="subject != null and subject != ''">
+                subject = #{subject},
+            </if>
+            <if test="department != null and department != ''">
+                department = #{department},
+            </if>
+            <if test="position != null and position != ''">
+                position = #{position},
+            </if>
             <if test="status != null">
                 status = #{status},
             </if>
@@ -176,19 +205,19 @@
     <!--通过主键删除-->
     <delete id="deleteById">
         delete
-        from studentmanage.student
+        from studentmanage.teacher
         where id = #{id}
     </delete>
 
-    <!--变更学生状态-->
+    <!--变更教师状态-->
     <update id="changeStatusById">
-        update studentmanage.student
+        update studentmanage.teacher
         set status = #{status}
         where id = #{id}
     </update>
 
     <!--通过昵称查询单条数据-->
-    <select id="queryByNickname" resultMap="StudentMap">
+    <select id="queryByNickname" resultMap="TeacherMap">
         select id,
                name,
                nickname,
@@ -199,11 +228,14 @@
                schoolid,
                phone,
                homeAddress,
+               subject,
+               department,
+               position,
                status,
                created_time,
                updated_time,
                updated_person
-        from studentmanage.student
+        from studentmanage.teacher
         where nickname = #{nickname}
     </select>
 
