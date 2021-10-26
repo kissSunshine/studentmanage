@@ -8,7 +8,7 @@ import java.util.Date;
 public class Teacher implements Serializable {
     private static final long serialVersionUID = -87760096675781309L;
     /**
-     * Tea + 12位雪花号，教师身份唯一标识
+     * Tea + 32位UUID，教师身份唯一标识
      */
     private String id;
     /**
@@ -36,7 +36,7 @@ public class Teacher implements Serializable {
      */
     private String idcard;
     /**
-     * 校区编号
+     * 校区编号：Sch + 32位UUID
      */
     private String schoolid;
     /**
