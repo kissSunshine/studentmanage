@@ -34,7 +34,7 @@ public interface StudentService {
      * @param student 实例对象
      * @return 实例对象
      */
-    ResponseVo update(Student student);
+    ResponseVo<String> update(Student student);
 
     /**
      * 通过主键删除数据

@@ -58,7 +58,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo update(Student student) {
+    public ResponseVo<String> update(Student student) {
+        // 1、转换生日字段类型
+        student.setBirthday(student.getBirthday().substring(0,10));
+        // 2、更新数据
         int updateCount = studentMapper.update(student);
         if(updateCount == 0){
             return ResponseVo.error("更新学生信息失败！");
