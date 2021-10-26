@@ -16,7 +16,6 @@ public class StudentController {
 
     @PostMapping("/add")
     public ResponseVo add(@RequestBody Student student){
-
         return studentService.insert(student);
     }
 

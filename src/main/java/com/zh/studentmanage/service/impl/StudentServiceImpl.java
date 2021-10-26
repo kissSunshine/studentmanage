@@ -10,7 +10,9 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -25,18 +27,27 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseVo insert(Student student) {
-        //1、非空校验放在Controller中
+        // 1、非空校验放在Controller中
 
-        //2、唯一校验
+        // 2、唯一校验
         Student studentCheck = studentMapper.queryByNickname(student.getNickname());
         if(studentCheck != null){
             return ResponseVo.error("昵称已注册，请修改！");
         }
 
-        //3、密码转为MD5加密
+        // 3、密码转为MD5加密
         //MD5摘要算法(Spring自带)
         student.setPassword(DigestUtils.md5DigestAsHex(student.getPassword().getBytes(StandardCharsets.UTF_8)));
 
+        // 4、填充其余信息
+        // 生成UUID作为主键
+        String id = "Stu" + UUID.randomUUID().toString().replace("-", "");
+        student.setId(id);
+        // 转换生日字段类型
+        student.setBirthday(student.getBirthday().substring(0,10));
+        // 如果身份证号为空，
+
+        // 5、插入数据库
         int insertCount = studentMapper.insert(student);
         if(insertCount == 0){
             return ResponseVo.error("添加学生信息失败！");

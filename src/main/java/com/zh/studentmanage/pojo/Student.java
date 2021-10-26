@@ -8,15 +8,15 @@ import java.util.Date;
 public class Student {
 
     /**
-     * Stu + 12位雪花号，学员身份唯一标识
+     * Stu + 32位UUID，学员身份唯一标识
      */
     private String id;
     /**
-     * 名称
+     * 名称 20个字符
      */
     private String name;
     /**
-     * 昵称
+     * 昵称 20个字符
      */
     private String nickname;
     /**
@@ -44,7 +44,7 @@ public class Student {
      */
     private String phone;
     /**
-     * 家庭住址
+     * 家庭住址  500个字符
      */
     private String homeaddress;
     /**

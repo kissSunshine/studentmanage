@@ -3,8 +3,13 @@ package com.zh.studentmanage.service.impl;
 import com.zh.studentmanage.StudentmanageApplicationTests;
 import com.zh.studentmanage.dao.StudentMapper;
 import com.zh.studentmanage.pojo.Student;
+import com.zh.studentmanage.vo.ResponseVo;
 import org.junit.Test;
+import org.springframework.util.DigestUtils;
+
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class StudentServiceImplTest extends StudentmanageApplicationTests {
 
@@ -19,6 +24,9 @@ public class StudentServiceImplTest extends StudentmanageApplicationTests {
 
     @Test
     public void insert() {
+        String id = "Stu" + UUID.randomUUID().toString().replace("-", "");
+        System.out.println(id);
+
     }
 
     @Test
