@@ -42,7 +42,7 @@ public interface StudentService {
      * @param id 主键
      * @return 是否成功
      */
-    ResponseVo deleteById(String id);
+    ResponseVo<String> deleteById(String id);
 
     /**
      * 变更学生状态

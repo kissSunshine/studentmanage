@@ -26,4 +26,9 @@ public class StudentController {
         return studentService.queryByParam(student, currentPage, pageSize);
     }
 
+    @PostMapping("/delete")
+    public ResponseVo<String> delete(@RequestBody String id){
+        return studentService.deleteById(id);
+    }
+
 }
