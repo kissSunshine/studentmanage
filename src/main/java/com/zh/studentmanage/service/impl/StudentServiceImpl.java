@@ -68,7 +68,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo deleteById(String id) {
+    public ResponseVo<String> deleteById(String id) {
         int deleteCount = studentMapper.deleteById(id);
         if(deleteCount == 0){
             return ResponseVo.error("删除学生信息失败！");
