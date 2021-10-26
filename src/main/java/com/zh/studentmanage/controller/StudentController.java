@@ -31,4 +31,9 @@ public class StudentController {
         return studentService.deleteById(id);
     }
 
+    @PostMapping("/update")
+    public ResponseVo<String> update(@RequestBody Student student){
+        return studentService.update(student);
+    }
+
 }
