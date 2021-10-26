@@ -207,5 +207,59 @@
         where nickname = #{nickname}
     </select>
 
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByParamLimit" resultMap="StudentMap">
+        select
+        id, name, nickname, birthday, gender, idCard, schoolid, phone, homeAddress, status, created_time, updated_time, updated_person
+        from studentmanage.student limit #{offset}, #{limit}
+        <where>
+            <if test="student.id != null and student.id != ''">
+                and id = #{student.id}
+            </if>
+            <if test="student.name != null and student.name != ''">
+                and name = #{student.name}
+            </if>
+            <if test="student.nickname != null and student.nickname != ''">
+                and nickname = #{student.nickname}
+            </if>
+            <if test="student.birthday != null">
+                and birthday = #{student.birthday}
+            </if>
+            <if test="student.gender != null">
+                and gender = #{student.gender}
+            </if>
+            <if test="student.idcard != null and student.idcard != ''">
+                and idCard = #{student.idcard}
+            </if>
+            <if test="student.schoolid != null and student.schoolid != ''">
+                and schoolid = #{student.schoolid}
+            </if>
+            <if test="student.phone != null and student.phone != ''">
+                and phone = #{student.phone}
+            </if>
+            <if test="student.homeaddress != null and student.homeaddress != ''">
+                and homeAddress = #{student.homeaddress}
+            </if>
+            <if test="student.status != null">
+                and status = #{student.status}
+            </if>
+            <if test="student.createdTime != null">
+                and created_time = #{student.createdTime}
+            </if>
+            <if test="student.updatedTime != null">
+                and updated_time = #{student.updatedTime}
+            </if>
+            <if test="student.updatedPerson != null and student.updatedPerson != ''">
+                and updated_person = #{student.updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--查询学生记录总数-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(1)
+        from studentmanage.student
+    </select>
+
 </mapper>
 
