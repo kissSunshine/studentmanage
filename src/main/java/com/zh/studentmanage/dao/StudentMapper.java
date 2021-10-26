@@ -89,9 +89,10 @@ public interface StudentMapper {
     List<Student> queryByParamLimit(@Param("student")Student student, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
-     * 查询学生记录总数
+     * 根据条件查询学生记录总数
+     *
      * @return 学生记录总数
      */
-    Integer queryCount();
+    Integer queryCount(@Param("student")Student student);
 
 }

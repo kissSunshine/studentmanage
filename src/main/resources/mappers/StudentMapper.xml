@@ -261,6 +261,20 @@
     <select id="queryCount" resultType="java.lang.Integer">
         select count(1)
         from studentmanage.student
+        <where>
+            <if test="student.name != null and student.name != ''">
+                and name = #{student.name}
+            </if>
+            <if test="student.nickname != null and student.nickname != ''">
+                and nickname = #{student.nickname}
+            </if>
+            <if test="student.gender != null">
+                and gender = #{student.gender}
+            </if>
+            <if test="student.status != null">
+                and status = #{student.status}
+            </if>
+        </where>
     </select>
 
 </mapper>
