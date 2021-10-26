@@ -211,7 +211,7 @@
     <select id="queryByParamLimit" resultMap="StudentMap">
         select
         id, name, nickname, birthday, gender, idCard, schoolid, phone, homeAddress, status, created_time, updated_time, updated_person
-        from studentmanage.student limit #{offset}, #{limit}
+        from studentmanage.student
         <where>
             <if test="student.id != null and student.id != ''">
                 and id = #{student.id}
@@ -253,6 +253,8 @@
                 and updated_person = #{student.updatedPerson}
             </if>
         </where>
+        order by updated_time
+        limit #{offset}, #{limit}
     </select>
 
     <!--查询学生记录总数-->
