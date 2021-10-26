@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.studentmanage.dao.SchoolMapper">
+
+    <resultMap type="com.zh.studentmanage.pojo.School" id="SchoolMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="CHAR"/>
+        <result property="phone" column="phone" jdbcType="CHAR"/>
+        <result property="telephone" column="telephone" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="schoolmaster" column="schoolmaster" jdbcType="CHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="CHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SchoolMap">
+        select id,
+               name,
+               birthday,
+               phone,
+               telephone,
+               address,
+               schoolmaster,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.school
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SchoolMap">
+        select id,
+               name,
+               birthday,
+               phone,
+               telephone,
+               address,
+               schoolmaster,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.school limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByParam" resultMap="SchoolMap">
+        select
+        id, name, birthday, phone, telephone, address, schoolmaster, created_time, updated_time, updated_person
+        from studentmanage.school
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone = #{telephone}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+            <if test="schoolmaster != null and schoolmaster != ''">
+                and schoolmaster = #{schoolmaster}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.school(name, birthday, phone, telephone, address, schoolmaster, created_time,
+                                         updated_time, updated_person)
+        values (#{name}, #{birthday}, #{phone}, #{telephone}, #{address}, #{schoolmaster}, #{createdTime},
+                #{updatedTime}, #{updatedPerson})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.school(name, birthday, phone, telephone, address, schoolmaster, created_time,
+        updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.birthday}, #{entity.phone}, #{entity.telephone}, #{entity.address},
+            #{entity.schoolmaster}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.school(name, birthday, phone, telephone, address, schoolmaster, created_time,
+        updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.birthday}, #{entity.phone}, #{entity.telephone}, #{entity.address},
+            #{entity.schoolmaster}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+        on duplicate key update
+        name = values(name) , birthday = values(birthday) , phone = values(phone) , telephone = values(telephone) ,
+        address = values(address) , schoolmaster = values(schoolmaster) , created_time = values(created_time) ,
+        updated_time = values(updated_time) , updated_person = values(updated_person)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update studentmanage.school
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="telephone != null and telephone != ''">
+                telephone = #{telephone},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="schoolmaster != null and schoolmaster != ''">
+                schoolmaster = #{schoolmaster},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                updated_person = #{updatedPerson},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from studentmanage.school
+        where id = #{id}
+    </delete>
+
+</mapper>
+
