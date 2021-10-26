@@ -80,4 +80,18 @@ public interface StudentMapper {
      */
     Student queryByNickname(String nickname);
 
+    /**
+     * 通过实体作为筛选条件，分页查询
+     *
+     * @param student 实例对象
+     * @return 对象列表
+     */
+    List<Student> queryByParamLimit(@Param("student")Student student, @Param("offset") int offset, @Param("limit") int limit);
+
+    /**
+     * 查询学生记录总数
+     * @return 学生记录总数
+     */
+    Integer queryCount();
+
 }

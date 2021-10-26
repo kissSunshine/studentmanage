@@ -4,6 +4,7 @@ import com.zh.studentmanage.dao.StudentMapper;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.StudentService;
+import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -87,13 +88,25 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo queryByParam(Student student) {
-        List<Student> studentList = studentMapper.queryByParam(student);
+    public ResponseVo<Student> queryByParam(Student student, int currentPage, int pageSize) {
+        // 1、查询学生记录总数
+        Integer studentCount = studentMapper.queryCount();
+        if (studentCount == null) {
+            return ResponseVo.error("查询学生信息失败！");
+        }
+        // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
+        // 偏移数量 = 当前页码 × 每页显示数量
+        int offset = (currentPage - 1) * pageSize;
+        // 3、查询
+        List<Student> studentList = studentMapper.queryByParamLimit(student, offset, pageSize);
         if (studentList == null) {
             return ResponseVo.error("查询学生信息失败！");
         }
+        // 4.封装分页数据
+        PageVo<List<Student>> studentListPageVo = new PageVo<>(studentList, studentCount);
 
-        return ResponseVo.success("查询成功",studentList);
+
+        return ResponseVo.success("查询成功", studentListPageVo);
     }
 
     @Override

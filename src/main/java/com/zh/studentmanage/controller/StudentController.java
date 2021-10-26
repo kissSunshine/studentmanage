@@ -3,12 +3,14 @@ package com.zh.studentmanage.controller;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.service.StudentService;
 import com.zh.studentmanage.vo.ResponseVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/student")
+@Slf4j
 public class StudentController {
 
     @Resource
@@ -19,9 +21,9 @@ public class StudentController {
         return studentService.insert(student);
     }
 
-    @PostMapping("/query")
-    public ResponseVo query(@RequestBody Student student) {
-        return studentService.queryByParam(student);
+    @GetMapping("/query")
+    public ResponseVo<Student> query(Student student, int currentPage, int pageSize) {
+        return studentService.queryByParam(student, currentPage, pageSize);
     }
 
 }

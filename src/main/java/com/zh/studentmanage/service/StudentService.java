@@ -55,10 +55,13 @@ public interface StudentService {
 
     /**
      * 通过重要因素查询
-     * @param student 学生信息
-     * @return
+     *
+     * @param student     学生信息
+     * @param currentPage 当前页
+     * @param pageSize    每页数据量
+     * @return 学生数据
      */
-    ResponseVo queryByParam(Student student);
+    ResponseVo<Student> queryByParam(Student student, int currentPage, int pageSize);
 
     /**
      * 登录
