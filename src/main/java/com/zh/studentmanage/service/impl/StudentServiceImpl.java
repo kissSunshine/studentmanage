@@ -90,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseVo<Student> queryByParam(Student student, int currentPage, int pageSize) {
         // 1、查询学生记录总数
-        Integer studentCount = studentMapper.queryCount();
+        Integer studentCount = studentMapper.queryCount(student);
         if (studentCount == null) {
             return ResponseVo.error("查询学生信息失败！");
         }
