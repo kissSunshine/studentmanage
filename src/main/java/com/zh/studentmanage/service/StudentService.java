@@ -26,7 +26,7 @@ public interface StudentService {
      * @param student 实例对象
      * @return 实例对象
      */
-    ResponseVo insert(Student student);
+    ResponseVo<String> insert(Student student);
 
     /**
      * 修改数据
@@ -49,9 +49,9 @@ public interface StudentService {
      * 0-离校；1-在校
      * @param id 学号
      * @param status 状态
-     * @return
+     * @return 返回提示信息
      */
-    ResponseVo changeStatusById(String id,Integer status);
+    ResponseVo<String> changeStatusById(String id,Integer status);
 
     /**
      * 通过重要因素查询
@@ -66,7 +66,7 @@ public interface StudentService {
     /**
      * 登录
      * @param user 用户
-     * @return
+     * @return 返回登录的学生信息
      */
-    ResponseVo login(User user);
+    ResponseVo<Student> login(User user);
 }

@@ -3,7 +3,7 @@ package com.zh.studentmanage.enums;
 import lombok.Getter;
 
 @Getter
-public enum genderEnum {
+public enum GenderEnum implements EnumInterface {
     MAN(1, "男"),
     WOMAN(0, "女")
     ;
@@ -11,8 +11,9 @@ public enum genderEnum {
     private final Integer code;
     private final String gender;
 
-    genderEnum(Integer code, String gender) {
+    GenderEnum(Integer code, String gender) {
         this.code = code;
         this.gender = gender;
     }
+
 }

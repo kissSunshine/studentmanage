@@ -1,11 +1,13 @@
-package com.zh.studentmanage.pojo;
+package com.zh.studentmanage.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zh.studentmanage.enums.GenderEnum;
+import com.zh.studentmanage.enums.StatusEnum;
+import com.zh.studentmanage.utils.EnumUtil;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class Student {
+public class StudentVo {
 
     /**
      * Stu + 32位UUID，学员身份唯一标识
@@ -20,17 +22,16 @@ public class Student {
      */
     private String nickname;
     /**
-     * 加密前6-20位，MD5加密
-     */
-    private String password;
-    /**
      * 形如：2021-10-01
      */
-    private Date birthday;
+    private String birthday;
     /**
      * 0-女；1-男
      */
     private Integer gender;
+
+    private String genderName;
+
     /**
      * 居民身份证号码
      */
@@ -39,6 +40,9 @@ public class Student {
      * 校区编号
      */
     private String schoolid;
+
+    private String schoolName;
+
     /**
      * 手机号码
      */
@@ -51,17 +55,21 @@ public class Student {
      * 0-离校；1-在校
      */
     private Integer status;
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-    /**
-     * 修改时间
-     */
-    private Date updatedTime;
+
+    private String statusName;
+
     /**
      * 修改信息操作人员
      */
     private String updatedPerson;
+
+    @JsonIgnore
+   public GenderEnum getGenderEnum(){
+       return EnumUtil.getEnumName(gender, GenderEnum.class);
+   }
+    @JsonIgnore
+    public StatusEnum getStatusEnum(){
+        return EnumUtil.getEnumName(status, StatusEnum.class);
+    }
 
 }
