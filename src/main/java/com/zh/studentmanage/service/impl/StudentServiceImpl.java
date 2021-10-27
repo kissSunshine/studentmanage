@@ -6,11 +6,15 @@ import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.StudentService;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
+import com.zh.studentmanage.vo.StudentVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo insert(Student student) {
+    public ResponseVo<String> insert(Student student) {
         // 1、非空校验放在Controller中
 
         // 2、唯一校验
@@ -44,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
         String id = "Stu" + UUID.randomUUID().toString().replace("-", "");
         student.setId(id);
         // 转换生日字段类型
-        student.setBirthday(student.getBirthday().substring(0,10));
+        //student.setBirthday(student.getBirthday().substring(0,10));
         // 如果身份证号为空，
 
         // 5、插入数据库
@@ -59,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseVo<String> update(Student student) {
         // 1、转换生日字段类型
-        student.setBirthday(student.getBirthday().substring(0,10));
+        //student.setBirthday(student.getBirthday().substring(0,10));
         // 2、更新数据
         int updateCount = studentMapper.update(student);
         if(updateCount == 0){
@@ -80,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo changeStatusById(String id, Integer status) {
+    public ResponseVo<String> changeStatusById(String id, Integer status) {
         int changeCount = studentMapper.changeStatusById(id, status);
         if(changeCount == 0){
             return ResponseVo.error("变更学生信息失败！");
@@ -104,15 +108,32 @@ public class StudentServiceImpl implements StudentService {
         if (studentList == null) {
             return ResponseVo.error("查询学生信息失败！");
         }
-        // 4.封装分页数据
-        PageVo<List<Student>> studentListPageVo = new PageVo<>(studentList, studentCount);
+        // 4、封装VO对象
+        List<StudentVo> studentVoList = new ArrayList<>();
+        for (Student stu : studentList) {
+            // 先将已有数据封装到VO
+            StudentVo studentVo = new StudentVo();
+            BeanUtils.copyProperties(stu, studentVo);
+            // 生日由Date类型转为String
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String date = dateFormat.format(stu.getBirthday());
+            studentVo.setBirthday(date);
+            // 再封装状态值对应的汉字
+            // 性别
+            studentVo.setGenderName(studentVo.getGenderEnum().getGender());
+            // 状态
+            studentVo.setStatusName(studentVo.getStatusEnum().getName());
 
+            studentVoList.add(studentVo);
+        }
+        // 5.封装分页数据
+        PageVo<List<StudentVo>> studentListPageVo = new PageVo<>(studentVoList, studentCount);
 
         return ResponseVo.success("查询成功", studentListPageVo);
     }
 
     @Override
-    public ResponseVo login(User user) {
+    public ResponseVo<Student> login(User user) {
         Student student = studentMapper.queryByNickname(user.getNickname());
         if(student == null){
             return ResponseVo.error("用户名或密码错误！");
