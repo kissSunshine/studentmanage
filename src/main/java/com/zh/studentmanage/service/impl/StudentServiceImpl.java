@@ -123,6 +123,8 @@ public class StudentServiceImpl implements StudentService {
             studentVo.setGenderName(studentVo.getGenderEnum().getGender());
             // 状态
             studentVo.setStatusName(studentVo.getStatusEnum().getName());
+            // 校区
+            studentVo.setSchoolName(studentVo.getSchoolEnum().getName());
 
             studentVoList.add(studentVo);
         }

@@ -2,6 +2,7 @@ package com.zh.studentmanage.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zh.studentmanage.enums.GenderEnum;
+import com.zh.studentmanage.enums.SchoolEnum;
 import com.zh.studentmanage.enums.StatusEnum;
 import com.zh.studentmanage.utils.EnumUtil;
 import lombok.Data;
@@ -70,6 +71,10 @@ public class StudentVo {
     @JsonIgnore
     public StatusEnum getStatusEnum(){
         return EnumUtil.getEnumName(status, StatusEnum.class);
+    }
+    @JsonIgnore
+    public SchoolEnum getSchoolEnum(){
+        return EnumUtil.getEnumName(schoolid, SchoolEnum.class);
     }
 
 }
