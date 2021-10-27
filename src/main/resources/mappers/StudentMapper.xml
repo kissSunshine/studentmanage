@@ -94,9 +94,9 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into studentmanage.student(id,name, nickname, password, birthday, gender, idCard, schoolid, phone,
-                                          homeAddress, status, created_time, updated_time, updated_person)
+                                          homeAddress, status, updated_person)
         values (#{id},#{name}, #{nickname}, #{password}, #{birthday}, #{gender}, #{idcard}, #{schoolid}, #{phone},
-                #{homeaddress}, #{status}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+                #{homeaddress}, #{status}, #{updatedPerson})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -159,12 +159,6 @@
             </if>
             <if test="status != null">
                 status = #{status},
-            </if>
-            <if test="createdTime != null">
-                created_time = #{createdTime},
-            </if>
-            <if test="updatedTime != null">
-                updated_time = #{updatedTime},
             </if>
             <if test="updatedPerson != null and updatedPerson != ''">
                 updated_person = #{updatedPerson},
@@ -253,7 +247,7 @@
                 and updated_person = #{student.updatedPerson}
             </if>
         </where>
-        order by updated_time
+        order by updated_time desc
         limit #{offset}, #{limit}
     </select>
 
