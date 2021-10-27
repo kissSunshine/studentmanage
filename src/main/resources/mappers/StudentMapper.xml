@@ -168,7 +168,7 @@
     </update>
 
     <!--通过主键删除-->
-    <delete id="deleteById">
+    <delete id="deleteById" parameterType="java.lang.String">
         delete
         from studentmanage.student
         where id = #{id}

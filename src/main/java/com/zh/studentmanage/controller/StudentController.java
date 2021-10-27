@@ -27,8 +27,8 @@ public class StudentController {
     }
 
     @PostMapping("/delete")
-    public ResponseVo<String> delete(@RequestBody String id){
-        return studentService.deleteById(id);
+    public ResponseVo<String> delete(@RequestBody Student student){
+        return studentService.deleteById(student.getId());
     }
 
     @PostMapping("/update")
