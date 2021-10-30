@@ -86,7 +86,7 @@ public interface ActivityMapper {
      *
      * @return 活动总数
      */
-    Integer queryCount(@Param("activity")Activity activity);
+    Integer queryCount(Activity activity);
 
 }
 

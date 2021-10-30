@@ -1,14 +1,12 @@
-package com.zh.studentmanage.pojo;
+package com.zh.studentmanage.vo;
 
 import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
-public class Activity implements Serializable {
-    private static final long serialVersionUID = 296278161640429880L;
+public class ActivityVo implements Serializable {
+    private static final long serialVersionUID = 123064456691250877L;
     /**
      * Act + 32位UUID，不同活动唯一标识
      */
@@ -45,14 +43,6 @@ public class Activity implements Serializable {
      * 活动说明
      */
     private String remark;
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-    /**
-     * 修改时间
-     */
-    private Date updatedTime;
     /**
      * 修改信息操作人员
      */
