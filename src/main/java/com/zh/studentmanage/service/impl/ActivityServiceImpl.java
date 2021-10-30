@@ -4,6 +4,7 @@ import com.zh.studentmanage.dao.ActivityMapper;
 import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.service.ActivityService;
+import com.zh.studentmanage.vo.ActivityVo;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import com.zh.studentmanage.vo.StudentVo;
@@ -39,8 +40,32 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public ResponseVo<List<Activity>> queryByParamLimit(Activity activity, int currentPage, int pageSize) {
+        // 1、查询学生记录总数
+        Integer activityCount = activityMapper.queryCount(activity);
+        if (activityCount == null) {
+            return ResponseVo.error("查询活动信息失败！");
+        }
+        // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
+        // 偏移数量 = 当前页码 × 每页显示数量
+        int offset = (currentPage - 1) * pageSize;
+        // 3、查询
+        List<Activity> activityList = activityMapper.queryByParamLimit(activity, offset, pageSize);
+        if (activityList == null) {
+            return ResponseVo.error("查询活动信息失败！");
+        }
+        // 4、封装VO对象
+        List<ActivityVo> activityVoList = new ArrayList<>();
+        for (Activity act : activityList) {
+            // 先将已有数据封装到VO
+            ActivityVo activityVo = new ActivityVo();
+            BeanUtils.copyProperties(act, activityVo);
 
-        return null;
+            activityVoList.add(activityVo);
+        }
+        // 5.封装分页数据
+        PageVo<List<ActivityVo>> activityListPageVo = new PageVo<>(activityVoList, activityCount);
+
+        return ResponseVo.success("查询成功", activityListPageVo);
     }
 
     /**

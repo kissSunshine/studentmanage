@@ -5,13 +5,11 @@
     <resultMap type="com.zh.studentmanage.pojo.Activity" id="ActivityMap">
         <result property="id" column="id" jdbcType="CHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="startdate" column="startDate" jdbcType="DATE"/>
-        <result property="starttime" column="startTime" jdbcType="TIME"/>
-        <result property="enddate" column="endDate" jdbcType="DATE"/>
-        <result property="endtime" column="endTime" jdbcType="TIME"/>
+        <result property="startDateTime" column="startDateTime" jdbcType="CHAR"/>
+        <result property="endDateTime" column="endDateTime" jdbcType="CHAR"/>
         <result property="address" column="address" jdbcType="VARCHAR"/>
-        <result property="cost" column="cost" jdbcType="NUMERIC"/>
-        <result property="discount" column="discount" jdbcType="NUMERIC"/>
+        <result property="cost" column="cost" jdbcType="VARCHAR"/>
+        <result property="discount" column="discount" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
         <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
@@ -23,10 +21,8 @@
     <select id="queryById" resultMap="ActivityMap">
         select id,
                name,
-               startDate,
-               startTime,
-               endDate,
-               endTime,
+               startDateTime,
+               endDateTime,
                address,
                cost,
                discount,
@@ -43,10 +39,8 @@
     <select id="queryAllByLimit" resultMap="ActivityMap">
         select id,
                name,
-               startDate,
-               startTime,
-               endDate,
-               endTime,
+               startDateTime,
+               endDateTime,
                address,
                cost,
                discount,
@@ -61,8 +55,8 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="ActivityMap">
         select
-        id, name, startDate, startTime, endDate, endTime, address, cost, discount, status, remark, created_time,
-        updated_time, updated_person
+        id, name, startDateTime, endDateTime, address, cost, discount, status, remark, created_time, updated_time,
+        updated_person
         from studentmanage.activity
         <where>
             <if test="id != null and id != ''">
@@ -71,17 +65,11 @@
             <if test="name != null and name != ''">
                 and name = #{name}
             </if>
-            <if test="startdate != null">
-                and startDate = #{startdate}
+            <if test="startDateTime != null and startDateTime != ''">
+                and startDateTime = #{startDateTime}
             </if>
-            <if test="starttime != null">
-                and startTime = #{starttime}
-            </if>
-            <if test="enddate != null">
-                and endDate = #{enddate}
-            </if>
-            <if test="endtime != null">
-                and endTime = #{endtime}
+            <if test="endDateTime != null and endDateTime != ''">
+                and endDateTime = #{endDateTime}
             </if>
             <if test="address != null and address != ''">
                 and address = #{address}
@@ -112,37 +100,37 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.activity(name, startDate, startTime, endDate, endTime, address, cost, discount,
-                                           status, remark, created_time, updated_time, updated_person)
-        values (#{name}, #{startdate}, #{starttime}, #{enddate}, #{endtime}, #{address}, #{cost}, #{discount},
-                #{status}, #{remark}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+        insert into studentmanage.activity(name, startDateTime, endDateTime, address, cost, discount, status, remark,
+                                           created_time, updated_time, updated_person)
+        values (#{name}, #{startDateTime}, #{endDateTime}, #{address}, #{cost}, #{discount}, #{status}, #{remark},
+                #{createdTime}, #{updatedTime}, #{updatedPerson})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.activity(name, startDate, startTime, endDate, endTime, address, cost, discount,
-        status, remark, created_time, updated_time, updated_person)
+        insert into studentmanage.activity(name, startDateTime, endDateTime, address, cost, discount, status, remark,
+        created_time, updated_time, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.startdate}, #{entity.starttime}, #{entity.enddate}, #{entity.endtime},
-            #{entity.address}, #{entity.cost}, #{entity.discount}, #{entity.status}, #{entity.remark},
-            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+            (#{entity.name}, #{entity.startDateTime}, #{entity.endDateTime}, #{entity.address}, #{entity.cost},
+            #{entity.discount}, #{entity.status}, #{entity.remark}, #{entity.createdTime}, #{entity.updatedTime},
+            #{entity.updatedPerson})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.activity(name, startDate, startTime, endDate, endTime, address, cost, discount,
-        status, remark, created_time, updated_time, updated_person)
+        insert into studentmanage.activity(name, startDateTime, endDateTime, address, cost, discount, status, remark,
+        created_time, updated_time, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.startdate}, #{entity.starttime}, #{entity.enddate}, #{entity.endtime},
-            #{entity.address}, #{entity.cost}, #{entity.discount}, #{entity.status}, #{entity.remark},
-            #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+            (#{entity.name}, #{entity.startDateTime}, #{entity.endDateTime}, #{entity.address}, #{entity.cost},
+            #{entity.discount}, #{entity.status}, #{entity.remark}, #{entity.createdTime}, #{entity.updatedTime},
+            #{entity.updatedPerson})
         </foreach>
         on duplicate key update
-        name = values(name) , startDate = values(startDate) , startTime = values(startTime) , endDate = values(endDate)
-        , endTime = values(endTime) , address = values(address) , cost = values(cost) , discount = values(discount) ,
-        status = values(status) , remark = values(remark) , created_time = values(created_time) , updated_time =
-        values(updated_time) , updated_person = values(updated_person)
+        name = values(name) , startDateTime = values(startDateTime) , endDateTime = values(endDateTime) , address =
+        values(address) , cost = values(cost) , discount = values(discount) , status = values(status) , remark =
+        values(remark) , created_time = values(created_time) , updated_time = values(updated_time) , updated_person =
+        values(updated_person)
     </insert>
 
     <!--通过主键修改数据-->
@@ -152,17 +140,11 @@
             <if test="name != null and name != ''">
                 name = #{name},
             </if>
-            <if test="startdate != null">
-                startDate = #{startdate},
+            <if test="startDateTime != null and startDateTime != ''">
+                startDateTime = #{startDateTime},
             </if>
-            <if test="starttime != null">
-                startTime = #{starttime},
-            </if>
-            <if test="enddate != null">
-                endDate = #{enddate},
-            </if>
-            <if test="endtime != null">
-                endTime = #{endtime},
+            <if test="endDateTime != null and endDateTime != ''">
+                endDateTime = #{endDateTime},
             </if>
             <if test="address != null and address != ''">
                 address = #{address},
@@ -202,7 +184,7 @@
     <!--通过实体作为筛选条件分页查询-->
     <select id="queryByParamLimit" resultMap="ActivityMap">
         select
-        id, name, startDate, startTime, endDate, endTime, address, cost, discount, status, remark, created_time, updated_time, updated_person
+        id, name, startDateTime, endDateTime, address, cost, discount, status, remark, created_time, updated_time, updated_person
         from studentmanage.activity
         <where>
             <if test="activity.id != null and activity.id != ''">
@@ -211,17 +193,11 @@
             <if test="activity.name != null and activity.name != ''">
                 and name = #{activity.name}
             </if>
-            <if test="activity.startdate != null">
-                and startDate = #{activity.startdate}
+            <if test="activity.startDateTime != null">
+                and startDateTime = #{activity.startDateTime}
             </if>
-            <if test="activity.starttime != null">
-                and startTime = #{activity.starttime}
-            </if>
-            <if test="activity.enddate != null">
-                and endDate = #{activity.enddate}
-            </if>
-            <if test="activity.endtime != null">
-                and endTime = #{activity.endtime}
+            <if test="activity.endDateTime != null">
+                and endDateTime = #{activity.endDateTime}
             </if>
             <if test="activity.status != null">
                 and status = #{activity.status}
@@ -239,17 +215,32 @@
         select count(1)
         from studentmanage.activity
         <where>
-            <if test="activity.name != null and activity.name != ''">
-                and name = #{student.name}
+            <if test="id != null and id != ''">
+                and id = #{id}
             </if>
-            <if test="activity.nickname != null and activity.nickname != ''">
-                and nickname = #{student.nickname}
+            <if test="name != null and name != ''">
+                and name = #{name}
             </if>
-            <if test="activity.gender != null">
-                and gender = #{student.gender}
+            <if test="startDateTime != null and startDateTime != ''">
+                and startDateTime = #{startDateTime}
             </if>
-            <if test="activity.status != null">
-                and status = #{student.status}
+            <if test="endDateTime != null and endDateTime != ''">
+                and endDateTime = #{endDateTime}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+            <if test="cost != null">
+                and cost = #{cost}
+            </if>
+            <if test="discount != null">
+                and discount = #{discount}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
             </if>
         </where>
     </select>
