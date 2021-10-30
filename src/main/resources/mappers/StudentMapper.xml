@@ -3,7 +3,7 @@
 <mapper namespace="com.zh.studentmanage.dao.StudentMapper">
 
     <resultMap type="com.zh.studentmanage.pojo.Student" id="StudentMap">
-        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="id" column="id" jdbcType="CHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -16,7 +16,7 @@
         <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
         <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
-        <result property="updatedPerson" column="updated_person" jdbcType="VARCHAR"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="CHAR"/>
     </resultMap>
 
     <!--查询单个-->
