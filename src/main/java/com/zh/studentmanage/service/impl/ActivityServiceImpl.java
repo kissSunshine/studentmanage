@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service("activityService")
 public class ActivityServiceImpl implements ActivityService {
@@ -75,9 +76,20 @@ public class ActivityServiceImpl implements ActivityService {
      * @return 实例对象
      */
     @Override
-    public Activity insert(Activity activity) {
-        this.activityMapper.insert(activity);
-        return activity;
+    public ResponseVo<String> insert(Activity activity) {
+        // 1、非空校验放在Controller中
+
+        // 2、填充其余信息
+        // 生成UUID作为主键
+        String id = "Act" + UUID.randomUUID().toString().replace("-", "");
+        activity.setId(id);
+
+        // 3、插入数据库
+        int insertCount = activityMapper.insert(activity);
+        if(insertCount != 1){
+            return ResponseVo.error("添加失败");
+        }
+        return ResponseVo.success("添加成功");
     }
 
     /**

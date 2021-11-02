@@ -30,7 +30,7 @@ public interface ActivityService {
      * @param activity 实例对象
      * @return 实例对象
      */
-    Activity insert(Activity activity);
+    ResponseVo<String> insert(Activity activity);
 
     /**
      * 修改数据

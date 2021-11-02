@@ -3,10 +3,8 @@ package com.zh.studentmanage.controller;
 import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.vo.ResponseVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 
 @RestController
@@ -19,6 +17,11 @@ public class ActivityController {
     @GetMapping("/query")
     public ResponseVo query(Activity activity, int currentPage, int pageSize) {
         return activityService.queryByParamLimit(activity, currentPage, pageSize);
+    }
+
+    @PostMapping("/add")
+    public ResponseVo<String> add(@RequestBody Activity activity) {
+        return activityService.insert(activity);
     }
 
 }
