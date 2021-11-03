@@ -14,7 +14,7 @@ public class SchoolController {
     @Resource
     private SchoolService schoolService;
 
-    @PostMapping("/queryAll")
+    @GetMapping("/queryAll")
     public ResponseVo<School> queryAll() {
         return schoolService.queryAll();
     }
