@@ -239,5 +239,94 @@
         where nickname = #{nickname}
     </select>
 
+    <!--通过实体作为筛选条件查询教师总数-->
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(1)
+        from studentmanage.teacher
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname = #{nickname}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="subject != null and subject != ''">
+                and subject = #{subject}
+            </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
+            </if>
+            <if test="position != null and position != ''">
+                and position = #{position}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByParamLimit" resultMap="TeacherMap">
+        select
+        id, name, nickname, password, birthday, gender, idCard, schoolid, phone, homeAddress, subject, department,
+        position, status, created_time, updated_time, updated_person
+        from studentmanage.teacher
+        <where>
+            <if test="teacher.id != null and teacher.id != ''">
+                and id = #{teacher.id}
+            </if>
+            <if test="teacher.name != null and teacher.name != ''">
+                and name = #{teacher.name}
+            </if>
+            <if test="teacher.nickname != null and teacher.nickname != ''">
+                and nickname = #{teacher.nickname}
+            </if>
+            <if test="teacher.gender != null">
+                and gender = #{teacher.gender}
+            </if>
+            <if test="teacher.schoolid != null and teacher.schoolid != ''">
+                and schoolid = #{teacher.schoolid}
+            </if>
+            <if test="teacher.phone != null and teacher.phone != ''">
+                and phone = #{teacher.phone}
+            </if>
+            <if test="teacher.homeaddress != null and teacher.homeaddress != ''">
+                and homeAddress = #{teacher.homeaddress}
+            </if>
+            <if test="teacher.subject != null and teacher.subject != ''">
+                and subject = #{teacher.subject}
+            </if>
+            <if test="teacher.department != null and teacher.department != ''">
+                and department = #{teacher.department}
+            </if>
+            <if test="teacher.position != null and teacher.position != ''">
+                and position = #{teacher.position}
+            </if>
+            <if test="teacher.status != null">
+                and status = #{teacher.status}
+            </if>
+            <if test="teacher.updatedPerson != null and teacher.updatedPerson != ''">
+                and updated_person = #{teacher.updatedPerson}
+            </if>
+        </where>
+        order by updated_time desc
+        limit #{offset}, #{pageSize}
+    </select>
+
 </mapper>
 

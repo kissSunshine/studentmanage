@@ -87,5 +87,20 @@ public interface TeacherMapper {
      */
     Teacher queryByNickname(String nickname);
 
+    /**
+     * 根据条件查询教师记录总数
+     *
+     * @return 教师记录总数
+     */
+    Integer queryCount(Teacher teacher);
+
+    /**
+     * 通过实体作为筛选条件，分页查询
+     *
+     * @param teacher 实例对象
+     * @return 对象列表
+     */
+    List<Teacher> queryByParamLimit(@Param("teacher")Teacher teacher, @Param("offset") int offset, @Param("pageSize") int pageSize);
+
 }
 

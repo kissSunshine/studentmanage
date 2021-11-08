@@ -5,12 +5,18 @@ import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.Teacher;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.TeacherService;
+import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
+import com.zh.studentmanage.vo.StudentVo;
+import com.zh.studentmanage.vo.TeacherVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -77,13 +83,47 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public ResponseVo queryByParam(Teacher teacher) {
-        List<Teacher> teacherList = teacherMapper.queryByParam(teacher);
-        if (teacherList == null) {
-            return ResponseVo.error("查询教师信息失败！");
+    public ResponseVo queryByParamLimit(Teacher teacher, int currentPage, int pageSize) {
+        // 1、查询老师记录总数
+        Integer teacherCount = teacherMapper.queryCount(teacher);
+        if (teacherCount == null) {
+            return ResponseVo.error("查询老师信息失败！");
         }
+        // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
+        // 偏移数量 = 当前页码 × 每页显示数量
+        int offset = (currentPage - 1) * pageSize;
+        // 3、查询
+        List<Teacher> teacherList = teacherMapper.queryByParamLimit(teacher, offset, pageSize);
+        if (teacherList == null) {
+            return ResponseVo.error("查询老师信息失败！");
+        }
+        // 4、封装VO对象
+        List<TeacherVo> teacherVoList = new ArrayList<>();
+        for (Teacher tea : teacherList) {
+            // 先将已有数据封装到VO
+            TeacherVo teacherVo = new TeacherVo();
+            BeanUtils.copyProperties(tea, teacherVo);
 
-        return ResponseVo.success("查询成功",teacherList);
+            // 再封装状态值对应的汉字
+            // 性别
+            teacherVo.setGenderName(teacherVo.getGenderEnum().getGender());
+            // 校区
+            teacherVo.setSchoolName(teacherVo.getSchoolEnum().getName());
+            // 学科
+            teacherVo.setSubjectName(teacherVo.getSubjectEnum().getName());
+            // 部门
+            teacherVo.setDepartmentName(teacherVo.getDepartmentEnum().getName());
+            // 职位
+            teacherVo.setPositionName(teacherVo.getPositionEnum().getName());
+            // 状态
+            teacherVo.setStatusName(teacherVo.getStatusEnum().getName());
+
+            teacherVoList.add(teacherVo);
+        }
+        // 5.封装分页数据
+        PageVo<List<TeacherVo>> teacherListPageVo = new PageVo<>(teacherVoList, teacherCount);
+
+        return ResponseVo.success("查询成功", teacherListPageVo);
     }
 
     @Override

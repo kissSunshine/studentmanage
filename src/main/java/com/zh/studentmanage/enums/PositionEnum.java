@@ -3,7 +3,7 @@ package com.zh.studentmanage.enums;
 import lombok.Getter;
 
 @Getter
-public enum PositionEnum {
+public enum PositionEnum implements EnumInterface{
     PRINCIPAL("01", "校长"),
     VICE_PRINCIPAL("02", "副校长"),
 

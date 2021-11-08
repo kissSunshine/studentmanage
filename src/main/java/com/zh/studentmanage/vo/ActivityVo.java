@@ -1,8 +1,10 @@
 package com.zh.studentmanage.vo;
 
+import com.zh.studentmanage.pojo.ActivityRealAddress;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class ActivityVo implements Serializable {
@@ -24,10 +26,6 @@ public class ActivityVo implements Serializable {
      */
     private String endDateTime;
     /**
-     * 活动地点
-     */
-    private String address;
-    /**
      * 费用
      */
     private BigDecimal cost;
@@ -39,6 +37,10 @@ public class ActivityVo implements Serializable {
      * 0-未开始；1-活动中；2-已结束
      */
     private Integer status;
+    /**
+     * 活动地点
+     */
+    private List<ActivityRealAddress> activityRealAddressList;
     /**
      * 活动说明
      */

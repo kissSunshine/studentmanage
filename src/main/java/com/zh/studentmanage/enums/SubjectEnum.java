@@ -3,7 +3,7 @@ package com.zh.studentmanage.enums;
 import lombok.Getter;
 
 @Getter
-public enum SubjectEnum {
+public enum SubjectEnum implements EnumInterface{
     YUWEN("01", "语文"),
     MATH("02", "数学"),
     ENGLISH("03", "英语"),
