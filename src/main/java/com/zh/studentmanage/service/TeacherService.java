@@ -28,7 +28,7 @@ public interface TeacherService {
      * @param teacher 实例对象
      * @return 实例对象
      */
-    ResponseVo insert(Teacher teacher);
+    ResponseVo<String> insert(Teacher teacher);
 
     /**
      * 修改数据
