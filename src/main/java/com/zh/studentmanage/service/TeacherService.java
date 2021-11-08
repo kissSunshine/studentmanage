@@ -60,7 +60,7 @@ public interface TeacherService {
      * @param teacher 学生信息
      * @return
      */
-    ResponseVo queryByParam(Teacher teacher);
+    ResponseVo queryByParamLimit(Teacher teacher, int currentPage, int pageSize);
 
     /**
      * 登录

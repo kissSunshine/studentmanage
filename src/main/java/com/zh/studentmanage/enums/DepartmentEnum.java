@@ -3,7 +3,7 @@ package com.zh.studentmanage.enums;
 import lombok.Getter;
 
 @Getter
-public enum DepartmentEnum {
+public enum DepartmentEnum implements EnumInterface {
 
     EDADMINISTRATION("01", "教务部门"),
     MARKET("02", "销售部门"),

@@ -1,25 +1,28 @@
 package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.ActivityMapper;
+import com.zh.studentmanage.dao.ActivityRealAddressMapper;
 import com.zh.studentmanage.pojo.Activity;
-import com.zh.studentmanage.pojo.Student;
+import com.zh.studentmanage.pojo.ActivityRealAddress;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.vo.ActivityVo;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
-import com.zh.studentmanage.vo.StudentVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service("activityService")
 public class ActivityServiceImpl implements ActivityService {
     @Resource
     private ActivityMapper activityMapper;
+
+    @Resource
+    private ActivityRealAddressMapper activityRealAddressMapper;
 
     /**
      * 通过ID查询单条数据
@@ -29,7 +32,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public Activity queryById(String id) {
-        return this.activityMapper.queryById(id);
+        return activityMapper.queryById(id);
     }
 
     /**
@@ -41,7 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public ResponseVo<List<Activity>> queryByParamLimit(Activity activity, int currentPage, int pageSize) {
-        // 1、查询学生记录总数
+        // 1、查询活动记录总数
         Integer activityCount = activityMapper.queryCount(activity);
         if (activityCount == null) {
             return ResponseVo.error("查询活动信息失败！");
@@ -49,12 +52,20 @@ public class ActivityServiceImpl implements ActivityService {
         // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
         // 偏移数量 = 当前页码 × 每页显示数量
         int offset = (currentPage - 1) * pageSize;
-        // 3、查询
+        // 3、查询活动主信息
         List<Activity> activityList = activityMapper.queryByParamLimit(activity, offset, pageSize);
         if (activityList == null) {
             return ResponseVo.error("查询活动信息失败！");
         }
-        // 4、封装VO对象
+        if (activityList.size() == 0) {
+            return ResponseVo.error("还没有添加过活动信息！");
+        }
+        // 4、查询活动地点信息
+        // 将查询的所有活动的id取出拼接为list
+        List<String> activityidList = activityList.stream().map(Activity::getId).collect(Collectors.toList());
+        List<ActivityRealAddress> activityRealAddressList = activityRealAddressMapper.queryByIdBatch(activityidList);
+
+        // 5、封装VO对象
         List<ActivityVo> activityVoList = new ArrayList<>();
         for (Activity act : activityList) {
             // 先将已有数据封装到VO
@@ -63,7 +74,7 @@ public class ActivityServiceImpl implements ActivityService {
 
             activityVoList.add(activityVo);
         }
-        // 5.封装分页数据
+        // 6、封装分页数据
         PageVo<List<ActivityVo>> activityListPageVo = new PageVo<>(activityVoList, activityCount);
 
         return ResponseVo.success("查询成功", activityListPageVo);

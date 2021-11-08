@@ -1,7 +1,6 @@
 package com.zh.studentmanage.dao;
 
 import com.zh.studentmanage.pojo.Activity;
-import com.zh.studentmanage.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
