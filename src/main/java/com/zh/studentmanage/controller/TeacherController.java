@@ -4,9 +4,8 @@ import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.Teacher;
 import com.zh.studentmanage.service.TeacherService;
 import com.zh.studentmanage.vo.ResponseVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 
 @RestController
@@ -19,6 +18,11 @@ public class TeacherController {
     @GetMapping("/query")
     public ResponseVo<Teacher> query(Teacher teacher, int currentPage, int pageSize) {
         return teacherService.queryByParamLimit(teacher, currentPage, pageSize);
+    }
+
+    @PostMapping("/add")
+    public ResponseVo<String> add(@RequestBody Teacher teacher) {
+        return teacherService.insert(teacher);
     }
 
 }

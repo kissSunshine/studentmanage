@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -32,7 +33,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public ResponseVo insert(Teacher teacher) {
+    public ResponseVo<String> insert(Teacher teacher) {
         //1、非空校验放在Controller中
 
         //2、唯一校验
@@ -45,6 +46,12 @@ public class TeacherServiceImpl implements TeacherService {
         //MD5摘要算法(Spring自带)
         teacher.setPassword(DigestUtils.md5DigestAsHex(teacher.getPassword().getBytes(StandardCharsets.UTF_8)));
 
+        // 4、填充其余信息
+        // 生成UUID作为主键
+        String id = "Tea" + UUID.randomUUID().toString().replace("-", "");
+        teacher.setId(id);
+
+        // 5、插入数据库
         int insertCount = teacherMapper.insert(teacher);
         if(insertCount == 0){
             return ResponseVo.error("添加教师信息失败！");
