@@ -1,5 +1,6 @@
 package com.zh.studentmanage.service;
 
+import com.zh.studentmanage.form.ActivityForm;
 import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.vo.ResponseVo;
 
@@ -27,10 +28,10 @@ public interface ActivityService {
     /**
      * 新增数据
      *
-     * @param activity 实例对象
+     * @param activityForm 实例对象
      * @return 实例对象
      */
-    ResponseVo<String> insert(Activity activity);
+    ResponseVo<String> insert(ActivityForm activityForm);
 
     /**
      * 修改数据

@@ -1,5 +1,6 @@
 package com.zh.studentmanage.controller;
 
+import com.zh.studentmanage.form.ActivityForm;
 import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.vo.ResponseVo;
@@ -20,8 +21,8 @@ public class ActivityController {
     }
 
     @PostMapping("/add")
-    public ResponseVo<String> add(@RequestBody Activity activity) {
-        return activityService.insert(activity);
+    public ResponseVo<String> add(@RequestBody ActivityForm activityForm) {
+        return activityService.insert(activityForm);
     }
 
 }

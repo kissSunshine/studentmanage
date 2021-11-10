@@ -1,10 +1,10 @@
 package com.zh.studentmanage.form;
 
 import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class ActivityForm implements Serializable {
@@ -40,7 +40,11 @@ public class ActivityForm implements Serializable {
     /**
      * 活动地点
      */
-    private String address;
+    private List<Map<String,String>> activityRealAddress;
+    /**
+     * 活动教师
+     */
+    private List<Map<String,String>> activityRealTeacher;
     /**
      * 活动说明
      */

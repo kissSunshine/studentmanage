@@ -73,11 +73,11 @@
         values (#{activityaddress}, #{createdTime}, #{updatedTime}, #{updatedPerson})
     </insert>
 
-    <insert id="insertBatch" keyProperty="activityid" useGeneratedKeys="true">
-        insert into activity_real_address(activityAddress, created_time, updated_time, updated_person)
+    <insert id="insertBatch" keyProperty="activityid">
+        insert into activity_real_address(activityid, schoolid, activityAddress, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.activityaddress}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        (#{entity.activityid}, #{entity.schoolid}, #{entity.activityaddress}, #{entity.updatedPerson})
         </foreach>
     </insert>
 
