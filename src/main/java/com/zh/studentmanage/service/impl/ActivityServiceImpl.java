@@ -2,8 +2,11 @@ package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.ActivityMapper;
 import com.zh.studentmanage.dao.ActivityRealAddressMapper;
+import com.zh.studentmanage.dao.ActivityRealTeacherMapper;
+import com.zh.studentmanage.form.ActivityForm;
 import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.pojo.ActivityRealAddress;
+import com.zh.studentmanage.pojo.ActivityRealTeacher;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.vo.ActivityVo;
 import com.zh.studentmanage.vo.PageVo;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Resource
     private ActivityRealAddressMapper activityRealAddressMapper;
+
+    @Resource
+    private ActivityRealTeacherMapper activityRealTeacherMapper;
 
     /**
      * 通过ID查询单条数据
@@ -83,23 +90,62 @@ public class ActivityServiceImpl implements ActivityService {
     /**
      * 新增数据
      *
-     * @param activity 实例对象
+     * @param activityForm 实例对象
      * @return 实例对象
      */
     @Override
-    public ResponseVo<String> insert(Activity activity) {
+    public ResponseVo<String> insert(ActivityForm activityForm) {
         // 1、非空校验放在Controller中
 
-        // 2、填充其余信息
-        // 生成UUID作为主键
+        // 2、生成活动表数据，并插入
+        Activity activity = new Activity();
+        BeanUtils.copyProperties(activityForm,activity);
+
         String id = "Act" + UUID.randomUUID().toString().replace("-", "");
         activity.setId(id);
 
-        // 3、插入数据库
         int insertCount = activityMapper.insert(activity);
         if(insertCount != 1){
             return ResponseVo.error("添加失败");
         }
+
+        // 3、生成活动地点表数据，并插入
+        List<Map<String, String>> activityRealAddressMapList = activityForm.getActivityRealAddress();
+        List<ActivityRealAddress> activityRealAddressList = new ArrayList<>();
+        for (Map<String, String> map : activityRealAddressMapList) {
+            ActivityRealAddress ara = new ActivityRealAddress();
+            ara.setActivityid(activity.getId());
+            ara.setSchoolid(map.get("schoolid"));
+            ara.setActivityaddress(map.get("activityAddress"));
+            ara.setUpdatedPerson(activityForm.getUpdatedPerson());
+            activityRealAddressList.add(ara);
+        }
+
+        int addressInsertCount = activityRealAddressMapper.insertBatch(activityRealAddressList);
+        if (addressInsertCount != activityRealAddressList.size()) {
+            return ResponseVo.error("添加失败");
+        }
+
+        // 4、生成活动教师表数据，并插入
+        List<Map<String, String>> activityRealTeacherMapList = activityForm.getActivityRealTeacher();
+        List<ActivityRealTeacher> activityRealTeacherList = new ArrayList<>();
+        for (Map<String, String> map : activityRealTeacherMapList) {
+            ActivityRealTeacher art = new ActivityRealTeacher();
+            art.setActivityid(activity.getId());
+            art.setTeacherid(map.get("teacherid"));
+            art.setSchoolid(map.get("schoolid"));
+            art.setStartdate(map.get("startDate"));
+            art.setEnddate(map.get("endDate"));
+            art.setAttend(Integer.valueOf(map.get("attend")));
+            art.setUpdatedPerson(activityForm.getUpdatedPerson());
+            activityRealTeacherList.add(art);
+        }
+
+        int teacherInsertCount = activityRealTeacherMapper.insertBatch(activityRealTeacherList);
+        if (teacherInsertCount != activityRealTeacherList.size()) {
+            return ResponseVo.error("添加失败");
+        }
+
         return ResponseVo.success("添加成功");
     }
 

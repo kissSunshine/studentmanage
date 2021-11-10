@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.studentmanage.dao.ActivityRealStudentMapper">
+
+    <resultMap type="com.zh.studentmanage.pojo.ActivityRealStudent" id="ActivityRealStudentMap">
+        <result property="activityid" column="activityid" jdbcType="CHAR"/>
+        <result property="studentid" column="studentid" jdbcType="CHAR"/>
+        <result property="cost" column="cost" jdbcType="NUMERIC"/>
+        <result property="schoolid" column="schoolid" jdbcType="CHAR"/>
+        <result property="attend" column="attend" jdbcType="INTEGER"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ActivityRealStudentMap">
+        select
+          activityid, studentid, cost, schoolid, attend, created_time, updated_time, updated_person
+        from activity_real_student
+        where activityid = #{activityid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ActivityRealStudentMap">
+        select
+          activityid, studentid, cost, schoolid, attend, created_time, updated_time, updated_person
+        from activity_real_student
+        <where>
+            <if test="activityid != null and activityid != ''">
+                and activityid = #{activityid}
+            </if>
+            <if test="studentid != null and studentid != ''">
+                and studentid = #{studentid}
+            </if>
+            <if test="cost != null">
+                and cost = #{cost}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="attend != null">
+                and attend = #{attend}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from activity_real_student
+        <where>
+            <if test="activityid != null and activityid != ''">
+                and activityid = #{activityid}
+            </if>
+            <if test="studentid != null and studentid != ''">
+                and studentid = #{studentid}
+            </if>
+            <if test="cost != null">
+                and cost = #{cost}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="attend != null">
+                and attend = #{attend}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="activityid" useGeneratedKeys="true">
+        insert into activity_real_student(cost, schoolid, attend, created_time, updated_time, updated_person)
+        values (#{cost}, #{schoolid}, #{attend}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="activityid" useGeneratedKeys="true">
+        insert into activity_real_student(cost, schoolid, attend, created_time, updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.cost}, #{entity.schoolid}, #{entity.attend}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="activityid" useGeneratedKeys="true">
+        insert into activity_real_student(cost, schoolid, attend, created_time, updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.cost}, #{entity.schoolid}, #{entity.attend}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+        on duplicate key update
+        cost = values(cost),
+        schoolid = values(schoolid),
+        attend = values(attend),
+        created_time = values(created_time),
+        updated_time = values(updated_time),
+        updated_person = values(updated_person)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update activity_real_student
+        <set>
+            <if test="cost != null">
+                cost = #{cost},
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                schoolid = #{schoolid},
+            </if>
+            <if test="attend != null">
+                attend = #{attend},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                updated_person = #{updatedPerson},
+            </if>
+        </set>
+        where activityid = #{activityid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from activity_real_student where activityid = #{activityid}
+    </delete>
+
+</mapper>
+

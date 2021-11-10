@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.studentmanage.dao.ActivityRealTeacherMapper">
+
+    <resultMap type="com.zh.studentmanage.pojo.ActivityRealTeacher" id="ActivityRealTeacherMap">
+        <result property="activityid" column="activityid" jdbcType="CHAR"/>
+        <result property="teacherid" column="teacherid" jdbcType="CHAR"/>
+        <result property="schoolid" column="schoolid" jdbcType="CHAR"/>
+        <result property="startdate" column="startDate" jdbcType="CHAR"/>
+        <result property="enddate" column="endDate" jdbcType="CHAR"/>
+        <result property="attend" column="attend" jdbcType="INTEGER"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="CHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ActivityRealTeacherMap">
+        select
+          activityid, teacherid, schoolid, startDate, endDate, attend, created_time, updated_time, updated_person
+        from activity_real_teacher
+        where activityid = #{activityid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ActivityRealTeacherMap">
+        select
+          activityid, teacherid, schoolid, startDate, endDate, attend, created_time, updated_time, updated_person
+        from activity_real_teacher
+        <where>
+            <if test="activityid != null and activityid != ''">
+                and activityid = #{activityid}
+            </if>
+            <if test="teacherid != null and teacherid != ''">
+                and teacherid = #{teacherid}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="startdate != null">
+                and startDate = #{startdate}
+            </if>
+            <if test="enddate != null">
+                and endDate = #{enddate}
+            </if>
+            <if test="attend != null">
+                and attend = #{attend}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from activity_real_teacher
+        <where>
+            <if test="activityid != null and activityid != ''">
+                and activityid = #{activityid}
+            </if>
+            <if test="teacherid != null and teacherid != ''">
+                and teacherid = #{teacherid}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="startdate != null">
+                and startDate = #{startdate}
+            </if>
+            <if test="enddate != null">
+                and endDate = #{enddate}
+            </if>
+            <if test="attend != null">
+                and attend = #{attend}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="activityid" useGeneratedKeys="true">
+        insert into activity_real_teacher(schoolid, startDate, endDate, attend, created_time, updated_time, updated_person)
+        values (#{schoolid}, #{startdate}, #{enddate}, #{attend}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="activityid">
+        insert into activity_real_teacher(activityid, teacherid, schoolid, startDate, endDate, attend, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.activityid}, #{entity.teacherid}, #{entity.schoolid}, #{entity.startdate}, #{entity.enddate}, #{entity.attend}, #{entity.updatedPerson})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="activityid" useGeneratedKeys="true">
+        insert into activity_real_teacher(schoolid, startDate, endDate, attend, created_time, updated_time, updated_person)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolid}, #{entity.startdate}, #{entity.enddate}, #{entity.attend}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+        </foreach>
+        on duplicate key update
+        schoolid = values(schoolid),
+        startDate = values(startDate),
+        endDate = values(endDate),
+        attend = values(attend),
+        created_time = values(created_time),
+        updated_time = values(updated_time),
+        updated_person = values(updated_person)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update activity_real_teacher
+        <set>
+            <if test="schoolid != null and schoolid != ''">
+                schoolid = #{schoolid},
+            </if>
+            <if test="startdate != null">
+                startDate = #{startdate},
+            </if>
+            <if test="enddate != null">
+                endDate = #{enddate},
+            </if>
+            <if test="attend != null">
+                attend = #{attend},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                updated_person = #{updatedPerson},
+            </if>
+        </set>
+        where activityid = #{activityid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from activity_real_teacher where activityid = #{activityid}
+    </delete>
+
+</mapper>
+
