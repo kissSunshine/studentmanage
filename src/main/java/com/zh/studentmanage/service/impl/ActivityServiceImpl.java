@@ -13,6 +13,8 @@ import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +96,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public ResponseVo<String> insert(ActivityForm activityForm) {
         // 1、非空校验放在Controller中
 
@@ -127,18 +130,23 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         // 4、生成活动教师表数据，并插入
-        List<Map<String, String>> activityRealTeacherMapList = activityForm.getActivityRealTeacher();
+        List<Map<String, Object>> activityRealTeacherMapList = activityForm.getActivityRealTeacher();
         List<ActivityRealTeacher> activityRealTeacherList = new ArrayList<>();
-        for (Map<String, String> map : activityRealTeacherMapList) {
-            ActivityRealTeacher art = new ActivityRealTeacher();
-            art.setActivityid(activity.getId());
-            art.setTeacherid(map.get("teacherid"));
-            art.setSchoolid(map.get("schoolid"));
-            art.setStartdate(map.get("startDate"));
-            art.setEnddate(map.get("endDate"));
-            art.setAttend(Integer.valueOf(map.get("attend")));
-            art.setUpdatedPerson(activityForm.getUpdatedPerson());
-            activityRealTeacherList.add(art);
+        for (Map<String, Object> activityRealTeacherMap : activityRealTeacherMapList) {
+            List<Map<String,String>> teacherList = (List<Map<String,String>>) activityRealTeacherMap.get("teacherList");
+            for (Map<String, String> teacher : teacherList) {
+                ActivityRealTeacher art = new ActivityRealTeacher();
+                art.setActivityid(activity.getId());
+                art.setTeacherid(teacher.get("teacherid"));
+                art.setSchoolid(activityRealTeacherMap.get("schoolid").toString());
+                art.setStartdate(teacher.get("startDate"));
+                art.setEnddate(teacher.get("endDate"));
+                art.setAttend(Integer.valueOf(teacher.get("attend")));
+//                art.setAttend(0);// 添加活动时，默认老师还没参加
+                art.setUpdatedPerson(activityForm.getUpdatedPerson());
+                activityRealTeacherList.add(art);
+            }
+
         }
 
         int teacherInsertCount = activityRealTeacherMapper.insertBatch(activityRealTeacherList);

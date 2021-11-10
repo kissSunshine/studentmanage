@@ -44,7 +44,7 @@ public class ActivityForm implements Serializable {
     /**
      * 活动教师
      */
-    private List<Map<String,String>> activityRealTeacher;
+    private List<Map<String, Object>> activityRealTeacher;
     /**
      * 活动说明
      */
