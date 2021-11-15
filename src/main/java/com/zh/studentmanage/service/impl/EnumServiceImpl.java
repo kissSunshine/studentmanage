@@ -28,7 +28,7 @@ public class EnumServiceImpl implements EnumService {
     }
 
     @Override
-    public ResponseVo<Map<String, String>> enumToListMap(Enum[] enums) {
+    public ResponseVo<List<Map<String, String>>> enumToListMap(Enum[] enums) {
         List<Map<String, String>> mapList = new ArrayList<>();
         for (Enum e : enums) {
             Map<String, String> map = new LinkedHashMap<>();

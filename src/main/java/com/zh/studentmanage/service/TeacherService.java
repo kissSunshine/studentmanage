@@ -69,4 +69,6 @@ public interface TeacherService {
      */
     ResponseVo login(User user);
 
+    ResponseVo<List<Teacher>> queryByIdBatch(List<String> teacherIdList);
+
 }

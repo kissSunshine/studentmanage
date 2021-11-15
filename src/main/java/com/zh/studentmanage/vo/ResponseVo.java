@@ -28,7 +28,7 @@ public class ResponseVo<T> {
         return new ResponseVo(1,msg);
     }
 
-    public static <T> ResponseVo<T> success(String msg,List<T> List) {
+    public static <T> ResponseVo<List<T>> success(String msg,List<T> List) {
         return new ResponseVo(1, msg, List);
     }
 

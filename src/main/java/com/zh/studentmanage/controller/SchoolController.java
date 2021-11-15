@@ -6,6 +6,7 @@ import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/school")
@@ -15,7 +16,7 @@ public class SchoolController {
     private SchoolService schoolService;
 
     @GetMapping("/queryAll")
-    public ResponseVo<School> queryAll() {
+    public ResponseVo<List<School>> queryAll() {
         return schoolService.queryAll();
     }
 

@@ -328,5 +328,29 @@
         limit #{offset}, #{pageSize}
     </select>
 
+    <!--查询单个-->
+    <select id="queryByIdBatch" resultMap="TeacherMap">
+        select id,
+               name,
+               nickname,
+               password,
+               birthday,
+               gender,
+               idCard,
+               schoolid,
+               phone,
+               homeAddress,
+               subject,
+               department,
+               position,
+               status,
+               updated_person
+        from studentmanage.teacher
+        where id in
+        <foreach collection="teacherIdList" item="teacherId" open="(" separator="," close=")">
+            #{teacherId}
+        </foreach>
+    </select>
+
 </mapper>
 

@@ -1,5 +1,6 @@
 package com.zh.studentmanage.dao;
 
+import com.zh.studentmanage.pojo.ActivityRealAddress;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.Teacher;
 import org.apache.ibatis.annotations.Param;
@@ -101,6 +102,14 @@ public interface TeacherMapper {
      * @return 对象列表
      */
     List<Teacher> queryByParamLimit(@Param("teacher")Teacher teacher, @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+    /**
+     * 通过ID批量查询数据
+     *
+     * @param teacherIdList 主键列表
+     * @return 实例对象
+     */
+    List<Teacher> queryByIdBatch(@Param("teacherIdList") List<String> teacherIdList);
 
 }
 

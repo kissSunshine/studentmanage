@@ -124,8 +124,8 @@
         select activityid, schoolid, activityAddress, updated_person
         from activity_real_address
         where activityid in
-        <foreach collection="activityidList" item="activityid" separator=",">
-            (#{activityid})
+        <foreach collection="activityidList" item="activityid" open="(" separator="," close=")">
+            #{activityid}
         </foreach>
     </select>
 

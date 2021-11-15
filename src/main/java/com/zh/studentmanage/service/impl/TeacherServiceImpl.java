@@ -1,6 +1,7 @@
 package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.TeacherMapper;
+import com.zh.studentmanage.pojo.ActivityRealAddress;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.Teacher;
 import com.zh.studentmanage.pojo.User;
@@ -147,6 +148,15 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         return ResponseVo.success("登录成功！",teacher);
+    }
+
+    @Override
+    public ResponseVo<List<Teacher>> queryByIdBatch(List<String> teacherIdList) {
+        List<Teacher> teacherList = teacherMapper.queryByIdBatch(teacherIdList);
+        if (teacherList.size() == 0) {
+            return ResponseVo.error("查询教师信息失败");
+        }
+        return ResponseVo.success("查询成功", teacherList);
     }
 
 

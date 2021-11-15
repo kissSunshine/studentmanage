@@ -74,7 +74,7 @@ public class SchoolServiceImpl implements SchoolService {
      * 查询所有校区
      * @return 校区列表
      */
-    public ResponseVo<School> queryAll(){
+    public ResponseVo<List<School>> queryAll(){
         School school = new School();
         List<School> schoolList = schoolMapper.queryByParam(school);
         return ResponseVo.success("查询校区成功！",schoolList);

@@ -1,5 +1,9 @@
 package com.zh.studentmanage.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zh.studentmanage.enums.AttendEnum;
+import com.zh.studentmanage.enums.StatusEnum;
+import com.zh.studentmanage.utils.EnumUtil;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,7 +41,7 @@ public class ActivityRealTeacherVo {
      * 0-未参加；1-已参加
      */
     private Integer attend;
-    private Integer attendName;
+    private String attendName;
 
     /**
      * 创建时间
@@ -51,6 +55,11 @@ public class ActivityRealTeacherVo {
      * 修改信息操作人员
      */
     private String updatedPerson;
+
+    @JsonIgnore
+    public AttendEnum  getAttendEnum(){
+        return EnumUtil.getEnumName(attend, AttendEnum.class);
+    }
 
 }
 
