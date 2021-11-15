@@ -1,14 +1,18 @@
 package com.zh.studentmanage.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zh.studentmanage.enums.GenderEnum;
+import com.zh.studentmanage.enums.StatusEnum;
 import com.zh.studentmanage.pojo.ActivityRealAddress;
+import com.zh.studentmanage.pojo.ActivityRealTeacher;
+import com.zh.studentmanage.utils.EnumUtil;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class ActivityVo implements Serializable {
-    private static final long serialVersionUID = 123064456691250877L;
+public class ActivityVo{
     /**
      * Act + 32位UUID，不同活动唯一标识
      */
@@ -37,10 +41,18 @@ public class ActivityVo implements Serializable {
      * 0-未开始；1-活动中；2-已结束
      */
     private Integer status;
+    private String statusName;
+
     /**
      * 活动地点
      */
     private List<ActivityRealAddress> activityRealAddressList;
+
+    /**
+     * 活动教师
+     */
+    private List<ActivityRealTeacher> activityRealTeacherList;
+
     /**
      * 活动说明
      */
@@ -49,5 +61,10 @@ public class ActivityVo implements Serializable {
      * 修改信息操作人员
      */
     private String updatedPerson;
+
+    @JsonIgnore
+    public StatusEnum getStatusEnum(){
+        return EnumUtil.getEnumName(status, StatusEnum.class);
+    }
 
 }

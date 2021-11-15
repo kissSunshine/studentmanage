@@ -158,5 +158,16 @@
         delete from activity_real_teacher where activityid = #{activityid}
     </delete>
 
+    <!--通过ID批量查询数据-->
+    <select id="queryByIdBatch" resultMap="ActivityRealTeacherMap">
+        select
+            activityid, teacherid, schoolid, startDate, endDate, attend
+        from activity_real_teacher
+        where activityid in
+        <foreach collection="activityidList" item="activityid" separator=",">
+            (#{activityid})
+        </foreach>
+    </select>
+
 </mapper>
 

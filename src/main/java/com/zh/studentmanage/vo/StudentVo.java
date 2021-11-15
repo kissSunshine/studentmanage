@@ -65,7 +65,7 @@ public class StudentVo {
     private String updatedPerson;
 
     @JsonIgnore
-   public GenderEnum getGenderEnum(){
+    public GenderEnum getGenderEnum(){
        return EnumUtil.getEnumName(gender, GenderEnum.class);
    }
     @JsonIgnore

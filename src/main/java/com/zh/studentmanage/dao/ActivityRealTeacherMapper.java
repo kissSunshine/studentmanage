@@ -1,5 +1,6 @@
 package com.zh.studentmanage.dao;
 
+import com.zh.studentmanage.pojo.ActivityRealAddress;
 import com.zh.studentmanage.pojo.ActivityRealTeacher;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -76,6 +77,14 @@ public interface ActivityRealTeacherMapper {
      * @return 影响行数
      */
     int deleteById(String activityid);
+
+    /**
+     * 通过ID批量查询数据
+     *
+     * @param activityidList 主键列表
+     * @return 实例对象
+     */
+    List<ActivityRealTeacher> queryByIdBatch(@Param("activityidList") List<String> activityidList);
 
 }
 

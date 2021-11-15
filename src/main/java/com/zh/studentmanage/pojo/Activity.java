@@ -26,10 +26,6 @@ public class Activity implements Serializable {
      */
     private String endDateTime;
     /**
-     * 活动地点
-     */
-    private String address;
-    /**
      * 费用
      */
     private BigDecimal cost;
