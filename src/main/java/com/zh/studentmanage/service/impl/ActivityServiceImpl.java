@@ -69,21 +69,33 @@ public class ActivityServiceImpl implements ActivityService {
         if (activityList.size() == 0) {
             return ResponseVo.error("还没有添加过活动信息！");
         }
+
         // 4、查询活动地点信息
         // 将查询的所有活动的id取出拼接为list
         List<String> activityidList = activityList.stream().map(Activity::getId).collect(Collectors.toList());
         List<ActivityRealAddress> activityRealAddressList = activityRealAddressMapper.queryByIdBatch(activityidList);
 
-        // 5、封装VO对象
+        // 5、查询活动教师信息
+        List<ActivityRealTeacher> activityRealTeacherList = activityRealTeacherMapper.queryByIdBatch(activityidList);
+
+        // 6、封装VO对象
         List<ActivityVo> activityVoList = new ArrayList<>();
         for (Activity act : activityList) {
             // 先将已有数据封装到VO
             ActivityVo activityVo = new ActivityVo();
             BeanUtils.copyProperties(act, activityVo);
+            // 活动主信息中的状态名称
+            activityVo.setStatusName(activityVo.getStatusEnum().getName());
+
+            // 活动地点信息
+            activityVo.setActivityRealAddressList(activityRealAddressList);
+
+            // 活动教师信息
+            activityVo.setActivityRealTeacherList(activityRealTeacherList);
 
             activityVoList.add(activityVo);
         }
-        // 6、封装分页数据
+        // 7、封装分页数据
         PageVo<List<ActivityVo>> activityListPageVo = new PageVo<>(activityVoList, activityCount);
 
         return ResponseVo.success("查询成功", activityListPageVo);
