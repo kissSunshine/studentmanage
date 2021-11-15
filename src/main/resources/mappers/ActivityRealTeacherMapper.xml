@@ -164,8 +164,8 @@
             activityid, teacherid, schoolid, startDate, endDate, attend
         from activity_real_teacher
         where activityid in
-        <foreach collection="activityidList" item="activityid" separator=",">
-            (#{activityid})
+        <foreach collection="activityidList" item="activityid" open="(" separator="," close=")">
+            #{activityid}
         </foreach>
     </select>
 

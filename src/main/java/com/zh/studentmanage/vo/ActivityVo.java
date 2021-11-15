@@ -46,12 +46,12 @@ public class ActivityVo{
     /**
      * 活动地点
      */
-    private List<ActivityRealAddress> activityRealAddressList;
+    private List<ActivityRealAddressVo> activityRealAddressVoList;
 
     /**
      * 活动教师
      */
-    private List<ActivityRealTeacher> activityRealTeacherList;
+    private List<ActivityRealTeacherVo> activityRealTeacherVoList;
 
     /**
      * 活动说明

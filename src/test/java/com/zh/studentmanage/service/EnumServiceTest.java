@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -19,7 +20,7 @@ public class EnumServiceTest extends StudentmanageApplicationTests {
     @Test
     public void enumToListMap() {
 
-        ResponseVo<Map<String, String>> mapResponseVo = enumService.enumToListMap(DepartmentEnum.values());
+        ResponseVo<List<Map<String, String>>> mapResponseVo = enumService.enumToListMap(DepartmentEnum.values());
         System.out.println(mapResponseVo);
 
         for (DepartmentEnum e :

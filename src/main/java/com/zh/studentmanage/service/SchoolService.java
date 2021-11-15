@@ -52,5 +52,5 @@ public interface SchoolService {
      * 查询所有校区
      * @return 校区列表
      */
-    ResponseVo<School> queryAll();
+    ResponseVo<List<School>> queryAll();
 }

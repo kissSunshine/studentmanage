@@ -3,6 +3,7 @@ package com.zh.studentmanage.service;
 
 import com.zh.studentmanage.vo.ResponseVo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface EnumService {
@@ -20,6 +21,6 @@ public interface EnumService {
      * @param enums 枚举
      * @return 值
      */
-    ResponseVo<Map<String, String>> enumToListMap(Enum[] enums);
+    ResponseVo<List<Map<String, String>>> enumToListMap(Enum[] enums);
 
 }

@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class TeacherMapperTest extends StudentmanageApplicationTests {
@@ -49,5 +52,15 @@ public class TeacherMapperTest extends StudentmanageApplicationTests {
 
     @Test
     public void queryByNickname() {
+    }
+
+    @Test
+    public void queryByIdBatch() {
+        List<String> teacherIdList = new ArrayList<>();
+        teacherIdList.add("1");
+        teacherIdList.add("2");
+
+        List<Teacher> teacherList = teacherMapper.queryByIdBatch(teacherIdList);
+        System.out.println(teacherList);
     }
 }
