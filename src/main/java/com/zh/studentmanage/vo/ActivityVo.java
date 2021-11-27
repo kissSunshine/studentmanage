@@ -1,6 +1,7 @@
 package com.zh.studentmanage.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zh.studentmanage.enums.ActivityStatusEnum;
 import com.zh.studentmanage.enums.GenderEnum;
 import com.zh.studentmanage.enums.StatusEnum;
 import com.zh.studentmanage.pojo.ActivityRealAddress;
@@ -63,8 +64,8 @@ public class ActivityVo{
     private String updatedPerson;
 
     @JsonIgnore
-    public StatusEnum getStatusEnum(){
-        return EnumUtil.getEnumName(status, StatusEnum.class);
+    public ActivityStatusEnum getStatusEnum(){
+        return EnumUtil.getEnumName(status, ActivityStatusEnum.class);
     }
 
 }
