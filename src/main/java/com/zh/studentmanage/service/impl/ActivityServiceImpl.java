@@ -5,6 +5,7 @@ import com.zh.studentmanage.dao.ActivityRealAddressMapper;
 import com.zh.studentmanage.dao.ActivityRealTeacherMapper;
 import com.zh.studentmanage.form.ActivityForm;
 import com.zh.studentmanage.pojo.*;
+import com.zh.studentmanage.service.ActivityRealAddressService;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.service.SchoolService;
 import com.zh.studentmanage.service.TeacherService;
@@ -27,6 +28,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Resource
     private ActivityRealAddressMapper activityRealAddressMapper;
+
+    @Resource
+    private ActivityRealAddressService activityRealAddressService;
 
     @Resource
     private ActivityRealTeacherMapper activityRealTeacherMapper;
@@ -94,7 +98,11 @@ public class ActivityServiceImpl implements ActivityService {
         List<School> schoolList = (List<School>) schoolService.queryAll().getData();
 
         // 6、查询活动地点信息并封装为activityRealAddressVoList
-        List<ActivityRealAddressVo> activityRealAddressVoList = getActivityRealAddressVoList(activityList, schoolList);
+        ResponseVo araRV = getActivityRealAddressVoList(activityList, schoolList);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        List<ActivityRealAddressVo> activityRealAddressVoList = (List<ActivityRealAddressVo>) araRV.getData();
 
         // 7、查询活动教师信息
         List<ActivityRealTeacherVo> activityRealTeacherVoList = getActivityRealTeacherVoList(activityList, schoolList);
@@ -138,11 +146,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @param schoolList 所有的校区
      * @return 活动地点信息VoList
      */
-    private List<ActivityRealAddressVo> getActivityRealAddressVoList(List<Activity> activityList, List<School> schoolList){
+    private ResponseVo  getActivityRealAddressVoList(List<Activity> activityList, List<School> schoolList){
         // 将查询的活动的id取出拼接为list
         List<String> activityidList = activityList.stream().map(Activity::getId).collect(Collectors.toList());
         // 查询活动地点信息
-        List<ActivityRealAddress> activityRealAddressList = activityRealAddressMapper.queryByIdBatch(activityidList);
+        ResponseVo<List<ActivityRealAddress>> araRV = activityRealAddressService.queryByIdBatch(activityidList);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        List<ActivityRealAddress> activityRealAddressList = (List<ActivityRealAddress>) araRV.getData();
         // 封装
         List<ActivityRealAddressVo> activityRealAddressVoList = new ArrayList<>();
         for (ActivityRealAddress ara : activityRealAddressList) {
@@ -153,7 +165,7 @@ public class ActivityServiceImpl implements ActivityService {
             activityRealAddressVoList.add(activityRealAddressVo);
         }
 
-        return activityRealAddressVoList;
+        return ResponseVo.success("查询活动地址信息成功",activityRealAddressVoList);
     }
 
     /**
@@ -325,7 +337,16 @@ public class ActivityServiceImpl implements ActivityService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(String id) {
-        return this.activityMapper.deleteById(id) > 0;
+    public ResponseVo<String> deleteById(String id) {
+        // 1、删除  活动地址表  数据
+        ResponseVo<String> araRV = activityRealAddressService.deleteByActivityId(id);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        // 2、删除  活动教师表  数据
+
+        // 3、删除  活动表  数据
+
+        return null;
     }
 }

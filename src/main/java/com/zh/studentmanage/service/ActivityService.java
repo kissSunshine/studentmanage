@@ -47,6 +47,6 @@ public interface ActivityService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(String id);
+    ResponseVo<String> deleteById(String id);
 
 }

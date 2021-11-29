@@ -25,4 +25,9 @@ public class ActivityController {
         return activityService.insert(activityForm);
     }
 
+    @PostMapping("/delete")
+    public ResponseVo delete(@RequestBody ActivityForm activityForm) {
+        return activityService.deleteById(activityForm.getId());
+    }
+
 }
