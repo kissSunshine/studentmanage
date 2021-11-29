@@ -87,10 +87,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.school(name, birthday, phone, telephone, address, schoolmaster, created_time,
-                                         updated_time, updated_person)
-        values (#{name}, #{birthday}, #{phone}, #{telephone}, #{address}, #{schoolmaster}, #{createdTime},
-                #{updatedTime}, #{updatedPerson})
+        insert into studentmanage.school(id, name, birthday, phone, telephone, address, schoolmaster, updated_person)
+        values (#{id}, #{name}, #{birthday}, #{phone}, #{telephone}, #{address}, #{schoolmaster}, #{updatedPerson})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -158,6 +156,22 @@
         from studentmanage.school
         where id = #{id}
     </delete>
+
+    <!--查询单个-->
+    <select id="queryByName" resultMap="SchoolMap">
+        select id,
+               name,
+               birthday,
+               phone,
+               telephone,
+               address,
+               schoolmaster,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.school
+        where name = #{name}
+    </select>
 
 </mapper>
 
