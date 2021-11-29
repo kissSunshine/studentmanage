@@ -25,4 +25,9 @@ public class SchoolController {
         return schoolService.insert(school);
     }
 
+    @PostMapping("/update")
+    public ResponseVo<String> update(@RequestBody School school){
+        return schoolService.update(school);
+    }
+
 }

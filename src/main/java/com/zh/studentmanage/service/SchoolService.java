@@ -38,7 +38,7 @@ public interface SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    School update(School school);
+    ResponseVo<String> update(School school);
 
     /**
      * 通过主键删除数据
