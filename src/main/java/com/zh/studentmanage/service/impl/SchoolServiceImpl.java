@@ -67,9 +67,14 @@ public class SchoolServiceImpl implements SchoolService {
      * @return 实例对象
      */
     @Override
-    public School update(School school) {
-        this.schoolMapper.update(school);
-        return this.queryById(school.getId());
+    public ResponseVo<String> update(School school) {
+        int updateCount = schoolMapper.update(school);
+        if (updateCount == 0) {
+            return ResponseVo.error("修改失败");
+        }
+
+        return ResponseVo.success("修改成功");
+
     }
 
     /**
