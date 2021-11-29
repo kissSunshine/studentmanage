@@ -30,7 +30,7 @@ public interface SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    School insert(School school);
+    ResponseVo<String> insert(School school);
 
     /**
      * 修改数据

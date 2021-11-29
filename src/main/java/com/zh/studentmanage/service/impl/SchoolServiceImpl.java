@@ -7,6 +7,7 @@ import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.UUID;
 
 @Service("schoolService")
 public class SchoolServiceImpl implements SchoolService {
@@ -42,9 +43,21 @@ public class SchoolServiceImpl implements SchoolService {
      * @return 实例对象
      */
     @Override
-    public School insert(School school) {
-        this.schoolMapper.insert(school);
-        return school;
+    public ResponseVo<String> insert(School school) {
+        School oldSchool = queryByName(school.getName());
+        if (oldSchool != null) {
+            return ResponseVo.error("该校区名称已使用，请更换");
+        }
+
+        // 生成UUID作为主键
+        String id = "Sch" + UUID.randomUUID().toString().replace("-", "");
+        school.setId(id);
+
+        int insertCount = schoolMapper.insert(school);
+        if (insertCount == 0){
+            return ResponseVo.error("添加校区失败");
+        }
+        return ResponseVo.success("添加校区成功");
     }
 
     /**
@@ -78,6 +91,15 @@ public class SchoolServiceImpl implements SchoolService {
         School school = new School();
         List<School> schoolList = schoolMapper.queryByParam(school);
         return ResponseVo.success("查询校区成功！",schoolList);
+    }
+
+    /**
+     * 通过校区名称查询
+     * @param name 校区名称
+     * @return 校区
+     */
+    public School queryByName(String name) {
+        return schoolMapper.queryByName(name);
     }
 
 

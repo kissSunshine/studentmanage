@@ -20,4 +20,9 @@ public class SchoolController {
         return schoolService.queryAll();
     }
 
+    @PostMapping("/add")
+    public ResponseVo<String> add(@RequestBody School school){
+        return schoolService.insert(school);
+    }
+
 }

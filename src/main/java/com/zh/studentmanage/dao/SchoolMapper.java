@@ -73,7 +73,13 @@ public interface SchoolMapper {
      */
     int deleteById(String id);
 
-
+    /**
+     * 通过校区名称查询单条数据
+     *
+     * @param name 校区名称
+     * @return 实例对象
+     */
+    School queryByName(String name);
 
 }
 

@@ -1,6 +1,5 @@
 package com.zh.studentmanage.controller;
 
-import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.Teacher;
 import com.zh.studentmanage.service.TeacherService;
 import com.zh.studentmanage.vo.ResponseVo;
