@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.studentmanage.dao.ClassesMapper">
+
+    <resultMap type="com.zh.studentmanage.pojo.Classes" id="ClassesMap">
+        <result property="id" column="id" jdbcType="CHAR"/>
+        <result property="name" column="name" jdbcType="CHAR"/>
+        <result property="birthday" column="birthday" jdbcType="CHAR"/>
+        <result property="classmaster" column="classmaster" jdbcType="CHAR"/>
+        <result property="schoolid" column="schoolid" jdbcType="CHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedPerson" column="updated_person" jdbcType="CHAR"/>
+        <result property="grade" column="grade" jdbcType="CHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ClassesMap">
+        select id,
+               name,
+               birthday,
+               classmaster,
+               schoolid,
+               created_time,
+               updated_time,
+               updated_person,
+               grade
+        from studentmanage.classes
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ClassesMap">
+        select id,
+               name,
+               birthday,
+               classmaster,
+               schoolid,
+               created_time,
+               updated_time,
+               updated_person,
+               grade
+        from studentmanage.classes limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ClassesMap">
+        select
+        id, name, birthday, classmaster, schoolid, created_time, updated_time, updated_person, grade
+        from studentmanage.classes
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="birthday != null">
+                and birthday = #{birthday}
+            </if>
+            <if test="classmaster != null and classmaster != ''">
+                and classmaster = #{classmaster}
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                and schoolid = #{schoolid}
+            </if>
+            <if test="createdTime != null">
+                and created_time = #{createdTime}
+            </if>
+            <if test="updatedTime != null">
+                and updated_time = #{updatedTime}
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                and updated_person = #{updatedPerson}
+            </if>
+            <if test="grade != null and grade != ''">
+                and grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.classes(name, birthday, classmaster, schoolid, created_time, updated_time,
+                                          updated_person, grade)
+        values (#{name}, #{birthday}, #{classmaster}, #{schoolid}, #{createdTime}, #{updatedTime}, #{updatedPerson},
+                #{grade})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.classes(name, birthday, classmaster, schoolid, created_time, updated_time,
+        updated_person, grade)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.birthday}, #{entity.classmaster}, #{entity.schoolid}, #{entity.createdTime},
+            #{entity.updatedTime}, #{entity.updatedPerson}, #{entity.grade})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into studentmanage.classes(name, birthday, classmaster, schoolid, created_time, updated_time,
+        updated_person, grade)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.birthday}, #{entity.classmaster}, #{entity.schoolid}, #{entity.createdTime},
+            #{entity.updatedTime}, #{entity.updatedPerson}, #{entity.grade})
+        </foreach>
+        on duplicate key update
+        name = values(name) , birthday = values(birthday) , classmaster = values(classmaster) , schoolid =
+        values(schoolid) , created_time = values(created_time) , updated_time = values(updated_time) , updated_person =
+        values(updated_person) , grade = values(grade)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update studentmanage.classes
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="classmaster != null and classmaster != ''">
+                classmaster = #{classmaster},
+            </if>
+            <if test="schoolid != null and schoolid != ''">
+                schoolid = #{schoolid},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime},
+            </if>
+            <if test="updatedPerson != null and updatedPerson != ''">
+                updated_person = #{updatedPerson},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from studentmanage.classes
+        where id = #{id}
+    </delete>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByParamLimit" resultMap="ClassesMap">
+        select
+        id, name, birthday, classmaster, schoolid, created_time, updated_time, updated_person, grade
+        from studentmanage.classes
+        <where>
+            <if test="classes.id != null and classes.id != ''">
+                and id = #{classes.id}
+            </if>
+            <if test="classes.name != null and classes.name != ''">
+                and name = #{classes.name}
+            </if>
+            <if test="classes.birthday != null and classes.birthday != ''">
+                and birthday = #{classes.birthday}
+            </if>
+            <if test="classes.classmaster != null and classes.classmaster != ''">
+                and classmaster = #{classes.classmaster}
+            </if>
+            <if test="classes.schoolid != null and classes.schoolid != ''">
+                and schoolid = #{classes.schoolid}
+            </if>
+            <if test="classes.grade != null and classes.grade != ''">
+                and grade = #{classes.grade}
+            </if>
+        </where>
+        order by updated_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryCount" resultMap="ClassesMap">
+        select count(1)
+        from studentmanage.classes
+        <where>
+            <if test="classes.id != null and classes.id != ''">
+                and id = #{classes.id}
+            </if>
+            <if test="classes.name != null and classes.name != ''">
+                and name = #{classes.name}
+            </if>
+            <if test="classes.birthday != null and classes.birthday != ''">
+                and birthday = #{classes.birthday}
+            </if>
+            <if test="classes.classmaster != null and classes.classmaster != ''">
+                and classmaster = #{classes.classmaster}
+            </if>
+            <if test="classes.schoolid != null and classes.schoolid != ''">
+                and schoolid = #{classes.schoolid}
+            </if>
+            <if test="classes.grade != null and classes.grade != ''">
+                and grade = #{classes.grade}
+            </if>
+        </where>
+    </select>
+
+</mapper>
+
