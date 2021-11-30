@@ -5,6 +5,7 @@ import com.zh.studentmanage.dao.ActivityRealAddressMapper;
 import com.zh.studentmanage.dao.ActivityRealTeacherMapper;
 import com.zh.studentmanage.form.ActivityForm;
 import com.zh.studentmanage.pojo.*;
+import com.zh.studentmanage.service.ActivityRealAddressService;
 import com.zh.studentmanage.service.ActivityService;
 import com.zh.studentmanage.service.SchoolService;
 import com.zh.studentmanage.service.TeacherService;
@@ -27,6 +28,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Resource
     private ActivityRealAddressMapper activityRealAddressMapper;
+
+    @Resource
+    private ActivityRealAddressService activityRealAddressService;
 
     @Resource
     private ActivityRealTeacherMapper activityRealTeacherMapper;
@@ -74,17 +78,7 @@ public class ActivityServiceImpl implements ActivityService {
             return ResponseVo.error("还没有添加过活动信息！");
         }
 
-        // 4、为封装activityRealAddressVoList和 准备数据
-        // 查询所有校区
-        List<School> schoolList = (List<School>) schoolService.queryAll().getData();
-
-        // 5、查询活动地点信息并封装为activityRealAddressVoList
-        List<ActivityRealAddressVo> activityRealAddressVoList = getActivityRealAddressVoList(activityList, schoolList);
-
-        // 6、查询活动教师信息
-        List<ActivityRealTeacherVo> activityRealTeacherVoList = getActivityRealTeacherVoList(activityList, schoolList);
-
-        // 7、封装VO对象
+        // 4、先将活动的主要信息封装到VO对象
         List<ActivityVo> activityVoList = new ArrayList<>();
         for (Activity act : activityList) {
             // 先将已有数据封装到VO
@@ -93,15 +87,54 @@ public class ActivityServiceImpl implements ActivityService {
             // 活动主信息中的状态名称
             activityVo.setStatusName(activityVo.getStatusEnum().getName());
 
-            // 活动地点信息
-            activityVo.setActivityRealAddressVoList(activityRealAddressVoList);
-
-            // 活动教师信息
-            activityVo.setActivityRealTeacherVoList(activityRealTeacherVoList);
+            activityVo.setActivityRealAddressVoList(new ArrayList<>());
+            activityVo.setActivityRealTeacherVoList(new ArrayList<>());
 
             activityVoList.add(activityVo);
         }
-        // 8、封装分页数据
+
+        // 5、为封装activityRealAddressVoList和 准备数据
+        // 查询所有校区
+        List<School> schoolList = (List<School>) schoolService.queryAll().getData();
+
+        // 6、查询活动地点信息并封装为activityRealAddressVoList
+        ResponseVo araRV = getActivityRealAddressVoList(activityList, schoolList);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        List<ActivityRealAddressVo> activityRealAddressVoList = (List<ActivityRealAddressVo>) araRV.getData();
+
+        // 7、查询活动教师信息
+        List<ActivityRealTeacherVo> activityRealTeacherVoList = getActivityRealTeacherVoList(activityList, schoolList);
+
+        // 8、再给活动封装   活动地点信息  和  活动教师信息
+        for (ActivityVo av : activityVoList) {
+            // 活动地点信息
+            for (ActivityRealAddressVo arav : activityRealAddressVoList) {
+                List<ActivityRealAddressVo> list;
+                if (av.getId().equals(arav.getActivityid())) {
+                    list = av.getActivityRealAddressVoList();
+                } else {
+                    list = new ArrayList<>();
+                }
+                list.add(arav);
+                av.setActivityRealAddressVoList(list);
+            }
+
+            // 活动教师信息
+            for (ActivityRealTeacherVo artv : activityRealTeacherVoList) {
+                List<ActivityRealTeacherVo> list;
+                if (av.getId().equals(artv.getActivityid())) {
+                    list = av.getActivityRealTeacherVoList();
+                } else {
+                    list = new ArrayList<>();
+                }
+                list.add(artv);
+                av.setActivityRealTeacherVoList(list);
+            }
+        }
+
+        // 9、封装分页数据
         PageVo<List<ActivityVo>> activityListPageVo = new PageVo<>(activityVoList, activityCount);
 
         return ResponseVo.success("查询成功", activityListPageVo);
@@ -113,11 +146,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @param schoolList 所有的校区
      * @return 活动地点信息VoList
      */
-    private List<ActivityRealAddressVo> getActivityRealAddressVoList(List<Activity> activityList, List<School> schoolList){
+    private ResponseVo  getActivityRealAddressVoList(List<Activity> activityList, List<School> schoolList){
         // 将查询的活动的id取出拼接为list
         List<String> activityidList = activityList.stream().map(Activity::getId).collect(Collectors.toList());
         // 查询活动地点信息
-        List<ActivityRealAddress> activityRealAddressList = activityRealAddressMapper.queryByIdBatch(activityidList);
+        ResponseVo<List<ActivityRealAddress>> araRV = activityRealAddressService.queryByIdBatch(activityidList);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        List<ActivityRealAddress> activityRealAddressList = (List<ActivityRealAddress>) araRV.getData();
         // 封装
         List<ActivityRealAddressVo> activityRealAddressVoList = new ArrayList<>();
         for (ActivityRealAddress ara : activityRealAddressList) {
@@ -125,26 +162,10 @@ public class ActivityServiceImpl implements ActivityService {
             // 先将已有数据封装到VO
             BeanUtils.copyProperties(ara, activityRealAddressVo);
 
-            // 活动名称
-            for (Activity act : activityList) {
-                if (ara.getActivityid().equals(act.getId())) {
-                    activityRealAddressVo.setActivityName(act.getName());
-                    break;
-                }
-            }
-
-            // 校区名称
-            for (School school : schoolList) {
-                if (ara.getSchoolid().equals(school.getId())) {
-                    activityRealAddressVo.setSchoolName(school.getName());
-                    break;
-                }
-            }
-
             activityRealAddressVoList.add(activityRealAddressVo);
         }
 
-        return activityRealAddressVoList;
+        return ResponseVo.success("查询活动地址信息成功",activityRealAddressVoList);
     }
 
     /**
@@ -166,42 +187,67 @@ public class ActivityServiceImpl implements ActivityService {
 
         // 封装
         List<ActivityRealTeacherVo> activityRealTeacherVoList = new ArrayList<>();
+        // 循环查出的所有的活动教师，按照  一个活动对应多个校区，每个校区对应多个教师  分组
         for (ActivityRealTeacher art : activityRealTeacherList) {
             ActivityRealTeacherVo activityRealTeacherVo = new ActivityRealTeacherVo();
-            // 先将已有数据封装到VO
-            BeanUtils.copyProperties(art, activityRealTeacherVo);
-
-            // 活动名称
-            for (Activity act : activityList) {
-                if (art.getActivityid().equals(act.getId())) {
-                    activityRealTeacherVo.setActivityName(act.getName());
-                    break;
-                }
+            // 第一个ActivityRealTeacherVo直接添加
+            if (activityRealTeacherVoList.size() == 0) {
+                activityRealTeacherVo.setActivityid(art.getActivityid());
+                activityRealTeacherVo.setSchoolid(art.getSchoolid());
+                ActivityRealTeacherDetailVo activityRealTeacherDetailVo = getActivityRealTeacherDetailVo(art, teacherList);
+                // 新建activityRealTeacherDetailVoList存放教师信息
+                List<ActivityRealTeacherDetailVo> activityRealTeacherDetailVoList = new ArrayList<>();
+                activityRealTeacherDetailVoList.add(activityRealTeacherDetailVo);
+                activityRealTeacherVo.setActivityRealTeacherDetailVo(activityRealTeacherDetailVoList);
             }
 
-            // 教师名称
-            for (Teacher tea : teacherList) {
-                if (art.getTeacherid().equals(tea.getId())) {
-                    activityRealTeacherVo.setTeacherName(tea.getName());
-                    break;
-                }
-            }
+            // 除第一个外，需要判断同一个活动的同一个校区
+            for (ActivityRealTeacherVo artv : activityRealTeacherVoList) {
+                // 封装数据
+                activityRealTeacherVo.setActivityid(art.getActivityid());
+                activityRealTeacherVo.setSchoolid(art.getSchoolid());
+                ActivityRealTeacherDetailVo activityRealTeacherDetailVo = getActivityRealTeacherDetailVo(art, teacherList);
+                List<ActivityRealTeacherDetailVo> activityRealTeacherDetailVoList;
 
-            // 校区名称
-            for (School school : schoolList) {
-                if (art.getSchoolid().equals(school.getId())) {
-                    activityRealTeacherVo.setSchoolName(school.getName());
-                    break;
+                if (artv.getActivityid().equals(art.getActivityid()) && artv.getSchoolid().equals(art.getSchoolid())) {
+                    // 如果教师是同一个活动同一个校区的，获取已经存放过的教师list，加入新的教师，再放回
+                    activityRealTeacherDetailVoList = artv.getActivityRealTeacherDetailVo();
+                }else {
+                    // 如果还没有存放过某个活动某校区的教师，则需要新建activityRealTeacherDetailVoList来存放
+                    activityRealTeacherDetailVoList = new ArrayList<>();
                 }
+                activityRealTeacherDetailVoList.add(activityRealTeacherDetailVo);
+                activityRealTeacherVo.setActivityRealTeacherDetailVo(activityRealTeacherDetailVoList);
             }
-
-            // 参加状态
-            activityRealTeacherVo.setAttendName(activityRealTeacherVo.getAttendEnum().getName());
 
             activityRealTeacherVoList.add(activityRealTeacherVo);
         }
 
         return activityRealTeacherVoList;
+    }
+
+    /**
+     * 根据 活动教师信息 和 教师信息封装 活动教师DetailVo对象
+     * @param activityRealTeacher  活动教师信息
+     * @param teacherList  教师信息
+     * @return  活动教师DetailVo对象
+     */
+    private ActivityRealTeacherDetailVo getActivityRealTeacherDetailVo(ActivityRealTeacher activityRealTeacher, List<Teacher> teacherList) {
+        // 封装数据
+        ActivityRealTeacherDetailVo activityRealTeacherDetailVo = new ActivityRealTeacherDetailVo();
+        activityRealTeacherDetailVo.setTeacherid(activityRealTeacher.getTeacherid());
+        // 教师名称
+        for (Teacher tea : teacherList) {
+            if (activityRealTeacher.getTeacherid().equals(tea.getId())) {
+                activityRealTeacherDetailVo.setNickname(tea.getName());
+                break;
+            }
+        }
+        activityRealTeacherDetailVo.setStartdate(activityRealTeacher.getStartdate());
+        activityRealTeacherDetailVo.setEnddate(activityRealTeacher.getEnddate());
+        activityRealTeacherDetailVo.setAttend(activityRealTeacher.getAttend());
+
+        return activityRealTeacherDetailVo;
     }
 
     /**
@@ -291,7 +337,16 @@ public class ActivityServiceImpl implements ActivityService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(String id) {
-        return this.activityMapper.deleteById(id) > 0;
+    public ResponseVo<String> deleteById(String id) {
+        // 1、删除  活动地址表  数据
+        ResponseVo<String> araRV = activityRealAddressService.deleteByActivityId(id);
+        if (araRV.getStatus().equals(0)) {
+            return araRV;
+        }
+        // 2、删除  活动教师表  数据
+
+        // 3、删除  活动表  数据
+
+        return null;
     }
 }
