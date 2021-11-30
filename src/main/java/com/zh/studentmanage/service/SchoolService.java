@@ -46,7 +46,7 @@ public interface SchoolService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(String id);
+    ResponseVo<String> deleteById(String id);
 
     /**
      * 查询所有校区

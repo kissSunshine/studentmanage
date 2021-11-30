@@ -84,8 +84,13 @@ public class SchoolServiceImpl implements SchoolService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(String id) {
-        return this.schoolMapper.deleteById(id) > 0;
+    public ResponseVo<String> deleteById(String id) {
+        int deleteCount = schoolMapper.deleteById(id);
+        if (deleteCount == 0) {
+            return ResponseVo.error("删除失败");
+        }
+
+        return ResponseVo.success("删除成功");
     }
 
     /**
