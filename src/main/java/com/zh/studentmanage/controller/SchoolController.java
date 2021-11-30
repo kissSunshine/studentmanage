@@ -30,4 +30,9 @@ public class SchoolController {
         return schoolService.update(school);
     }
 
+    @PostMapping("/delete")
+    public ResponseVo<String> delete(@RequestBody School school){
+        return schoolService.deleteById(school.getId());
+    }
+
 }
