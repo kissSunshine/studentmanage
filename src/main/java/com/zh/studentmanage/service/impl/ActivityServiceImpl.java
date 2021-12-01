@@ -183,7 +183,7 @@ public class ActivityServiceImpl implements ActivityService {
         // 将查询的活动教师的id取出拼接为list
         List<String> teacheridList = activityRealTeacherList.stream().map(ActivityRealTeacher::getTeacherid).collect(Collectors.toList());
         // 查询教师信息
-        List<Teacher> teacherList = teacherService.queryByIdBatch(teacheridList).getData();
+        List<Teacher> teacherList = teacherService.queryByIdBatch(teacheridList);
 
         // 封装
         List<ActivityRealTeacherVo> activityRealTeacherVoList = new ArrayList<>();

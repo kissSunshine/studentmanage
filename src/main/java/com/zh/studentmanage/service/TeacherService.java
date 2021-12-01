@@ -69,6 +69,18 @@ public interface TeacherService {
      */
     ResponseVo login(User user);
 
-    ResponseVo<List<Teacher>> queryByIdBatch(List<String> teacherIdList);
+    /**
+     * 根据教师id列表查询教师信息
+     * @param teacherIdList 教师id列表
+     * @return 教师信息
+     */
+    List<Teacher> queryByIdBatch(List<String> teacherIdList);
+
+    /**
+     * 通过重要因素查询
+     * @param teacher 学生信息
+     * @return 教师列表
+     */
+    List<Teacher> queryByParam(Teacher teacher);
 
 }
