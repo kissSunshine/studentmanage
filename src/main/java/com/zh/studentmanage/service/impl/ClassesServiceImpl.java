@@ -80,8 +80,7 @@ public class ClassesServiceImpl implements ClassesService {
                 }
             }
         }
-        // 7、
 
-        return null;
+        return ResponseVo.success("查询成功！", classesVoList);
     }
 }
