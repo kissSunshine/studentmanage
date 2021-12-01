@@ -9,6 +9,7 @@ public enum PositionEnum implements EnumInterface{
 
     TEACHER_DIRECTOR("11", "教导主任"),
     TEACHER("12", "教师"),
+    CLASSES_DIRECTOR("13", "班主任"),
 
     COUNSELOR_DIRECTOR("21", "咨询主任"),
     COUNSELOR("22", "咨询员"),

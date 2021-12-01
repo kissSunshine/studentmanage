@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class RuntimeExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(CustomException.class)
     @ResponseBody
-    public ResponseVo handler(RuntimeException e) {
-        return ResponseVo.error(e.getMessage());
+    public ResponseVo handler(CustomException e) {
+        return ResponseVo.error(e);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -2,9 +2,6 @@ package com.zh.studentmanage.vo;
 
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
-
 @Data
 public class ClassesVo {
     /**
@@ -41,4 +38,5 @@ public class ClassesVo {
 
     //英语
     private String englishTeacher;
+
 }

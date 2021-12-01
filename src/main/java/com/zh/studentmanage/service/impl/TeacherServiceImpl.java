@@ -1,14 +1,13 @@
 package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.TeacherMapper;
-import com.zh.studentmanage.pojo.ActivityRealAddress;
-import com.zh.studentmanage.pojo.Student;
+import com.zh.studentmanage.enums.ErrorEnum;
+import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.pojo.Teacher;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.TeacherService;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
-import com.zh.studentmanage.vo.StudentVo;
 import com.zh.studentmanage.vo.TeacherVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -94,8 +92,8 @@ public class TeacherServiceImpl implements TeacherService {
     public ResponseVo queryByParamLimit(Teacher teacher, int currentPage, int pageSize) {
         // 1、查询老师记录总数
         Integer teacherCount = teacherMapper.queryCount(teacher);
-        if (teacherCount == null) {
-            return ResponseVo.error("查询老师信息失败！");
+        if (teacherCount == 0) {
+            throw new RuntimeException("还未添加过教师！");
         }
         // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
         // 偏移数量 = 当前页码 × 每页显示数量
@@ -103,7 +101,7 @@ public class TeacherServiceImpl implements TeacherService {
         // 3、查询
         List<Teacher> teacherList = teacherMapper.queryByParamLimit(teacher, offset, pageSize);
         if (teacherList == null) {
-            return ResponseVo.error("查询老师信息失败！");
+            throw new RuntimeException("未查询到符合条件的教师数据");
         }
         // 4、封装VO对象
         List<TeacherVo> teacherVoList = new ArrayList<>();
@@ -151,12 +149,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public ResponseVo<List<Teacher>> queryByIdBatch(List<String> teacherIdList) {
+    public List<Teacher> queryByIdBatch(List<String> teacherIdList) {
         List<Teacher> teacherList = teacherMapper.queryByIdBatch(teacherIdList);
         if (teacherList.size() == 0) {
-            return ResponseVo.error("查询教师信息失败");
+            throw  new CustomException(ErrorEnum.TEACHER_NOT_FOUND);
         }
-        return ResponseVo.success("查询成功", teacherList);
+        return teacherList;
+    }
+
+    @Override
+    public List<Teacher> queryByParam(Teacher teacher) {
+        List<Teacher> teacherList = teacherMapper.queryByParam(teacher);
+        if (teacherList.size() == 0) {
+            throw new CustomException(ErrorEnum.TEACHER_NOT_FOUND);
+        }
+        return teacherList;
     }
 
 
