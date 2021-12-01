@@ -6,6 +6,7 @@ import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -32,6 +33,12 @@ public class TeacherController {
     @PostMapping("/delete")
     public ResponseVo<String> delete(@RequestBody Teacher teacher) {
         return teacherService.deleteById(teacher.getId());
+    }
+
+    @GetMapping("/queryByParams")
+    public ResponseVo<List<Teacher>> queryByParams(Teacher teacher) {
+        List<Teacher> teacherList = teacherService.queryByParam(teacher);
+        return ResponseVo.success("查询班主任老师成功", teacherList);
     }
 
 }
