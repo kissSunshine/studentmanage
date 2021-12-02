@@ -9,6 +9,7 @@ import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.pojo.ClassRealTeacher;
 import com.zh.studentmanage.pojo.Classes;
 import com.zh.studentmanage.pojo.Teacher;
+import com.zh.studentmanage.service.ClassRealStudentService;
 import com.zh.studentmanage.service.ClassRealTeacherService;
 import com.zh.studentmanage.service.ClassesService;
 import com.zh.studentmanage.service.TeacherService;
@@ -32,6 +33,8 @@ public class ClassesServiceImpl implements ClassesService {
     private TeacherService teacherService;
     @Resource
     private ClassRealTeacherService classRealTeacherService;
+    @Resource
+    private ClassRealStudentService classRealStudentService;
 
     @Override
     public ResponseVo<List<ClassesVo>> queryByParamLimit(Classes classes, int currentPage, int pageSize) {
@@ -63,7 +66,7 @@ public class ClassesServiceImpl implements ClassesService {
         List<String> classesIdList = classesList.stream().map(Classes::getId).collect(Collectors.toList());
         List<ClassRealTeacher> classRealTeacherList = new ArrayList<>();
         try {
-            classRealTeacherList = classRealTeacherService.queryByIdBatch(classesIdList);
+            classRealTeacherList = classRealTeacherService.queryByClassIdBatch(classesIdList);
         } catch (CustomException e) {
             if (e.getCode().equals(ErrorEnum.CLA_R_TEA_NOT_FOUND.getCode())) {
                 // 5.1、如果是刚刚添加班级信息，还没有教师和学生，则只需要封装班级主要信息，直接返回
@@ -162,4 +165,22 @@ public class ClassesServiceImpl implements ClassesService {
         }
         return ResponseVo.success("修改班级信息成功");
     }
+
+    @Override
+    public ResponseVo<String> deleteClass(Classes classes) {
+        Integer classTeacherCount = classRealTeacherService.haveClassTeacher(classes.getId());
+        if (classTeacherCount == 1) {
+            throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_TEACHER);
+        }
+        Integer classStudentCount = classRealStudentService.haveClassStudent(classes.getId());
+        if (classStudentCount == 1) {
+            throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_STUDENT);
+        }
+        int deleteCount = classesMapper.deleteById(classes.getId());
+        if (deleteCount == 0) {
+            throw new CustomException(ErrorEnum.CLASSES_DELETE_FAIL);
+        }
+        return ResponseVo.success("删除成功！");
+    }
+    
 }

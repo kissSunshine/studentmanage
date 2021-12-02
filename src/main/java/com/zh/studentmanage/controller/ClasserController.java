@@ -32,4 +32,9 @@ public class ClasserController {
     public ResponseVo<String> update(@RequestBody Classes classes) {
         return classesService.update(classes);
     }
+
+    @PostMapping("/deleteClass")
+    public ResponseVo<String> deleteClass(@RequestBody Classes classes) {
+        return classesService.deleteClass(classes);
+    }
 }

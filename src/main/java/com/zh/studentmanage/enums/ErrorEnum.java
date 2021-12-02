@@ -10,6 +10,9 @@ public enum ErrorEnum implements EnumInterface {
     CLASSES_ADD_FAIL("ClaErr02","添加班级失败！"),
     CLASSES_NAME_EXISTS("ClaErr02", "该班级名称已存在"),
     CLASSES_UPDATE_FAIL("ClaErr03", "修改班级失败"),
+    CLASSES_DELETE_HAVE_TEACHER("ClaErr04", "删除班级失败，该班级还有教师，请先删除所有教师"),
+    CLASSES_DELETE_HAVE_STUDENT("ClaErr05", "删除班级失败，该班级还有学生，请先删除所有学生"),
+    CLASSES_DELETE_FAIL("ClaErr06", "删除班级失败"),
 
     CLA_R_TEA_NOT_FOUND("CRT01", "未查询到符合条件的班级教师信息"),
     ;
