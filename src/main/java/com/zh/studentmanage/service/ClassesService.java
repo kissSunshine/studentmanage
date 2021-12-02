@@ -15,4 +15,18 @@ public interface ClassesService {
      * @return 结果
      */
     ResponseVo<List<ClassesVo>> queryByParamLimit(Classes classes, int currentPage, int pageSize);
+
+    /**
+     * 添加班级
+     * @param classes 班级信息
+     * @return 结果
+     */
+    ResponseVo<String> add(Classes classes);
+
+    /**
+     * 修改班级
+     * @param classes 班级信息
+     * @return 结果
+     */
+    ResponseVo<String> update(Classes classes);
 }

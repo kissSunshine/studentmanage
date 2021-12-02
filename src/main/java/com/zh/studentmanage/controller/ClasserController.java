@@ -20,7 +20,16 @@ public class ClasserController {
 
     @GetMapping("/query")
     public ResponseVo<List<ClassesVo>> query(Classes classes, int currentPage, int pageSize) {
-        return classesService.queryByParamLimit(classes,currentPage,pageSize);
+        return classesService.queryByParamLimit(classes, currentPage, pageSize);
     }
 
+    @PostMapping("/add")
+    public ResponseVo<String> add(@RequestBody Classes classes) {
+        return classesService.add(classes);
+    }
+
+    @PostMapping("/update")
+    public ResponseVo<String> update(@RequestBody Classes classes) {
+        return classesService.update(classes);
+    }
 }
