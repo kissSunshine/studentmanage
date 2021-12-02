@@ -77,7 +77,14 @@ public interface ClassRealTeacherMapper {
      * @param classesidList 班级id列表
      * @return 班级教师信息
      */
-    List<ClassRealTeacher> queryByIdBatch(@Param("classesidList")List<String> classesidList);
+    List<ClassRealTeacher> queryByClassIdBatch(@Param("classesidList")List<String> classesidList);
+
+    /**
+     * 通过班级id查询是否还有对应的老师信息
+     * @param classId 班级id
+     * @return 1-有；0-无
+     */
+    Integer haveClassTeacher(String classId);
 
 }
 

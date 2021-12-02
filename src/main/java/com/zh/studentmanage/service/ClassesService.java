@@ -29,4 +29,11 @@ public interface ClassesService {
      * @return 结果
      */
     ResponseVo<String> update(Classes classes);
+
+    /**
+     * 删除班级
+     * @param classes 班级信息
+     * @return 结果
+     */
+    ResponseVo<String> deleteClass(Classes classes);
 }

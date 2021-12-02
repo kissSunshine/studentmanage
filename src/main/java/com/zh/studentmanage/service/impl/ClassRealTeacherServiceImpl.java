@@ -61,12 +61,17 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
     }
 
     @Override
-    public List<ClassRealTeacher> queryByIdBatch(List<String> classesidList) {
-        List<ClassRealTeacher> classRealTeacherList = classRealTeacherMapper.queryByIdBatch(classesidList);
+    public List<ClassRealTeacher> queryByClassIdBatch(List<String> classesidList) {
+        List<ClassRealTeacher> classRealTeacherList = classRealTeacherMapper.queryByClassIdBatch(classesidList);
         if (classRealTeacherList.size() == 0) {
             throw new CustomException(ErrorEnum.CLA_R_TEA_NOT_FOUND);
         }
         return classRealTeacherList;
+    }
+
+    @Override
+    public Integer haveClassTeacher(String classId) {
+        return classRealTeacherMapper.haveClassTeacher(classId);
     }
 
 

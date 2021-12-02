@@ -174,14 +174,22 @@
     </delete>
 
     <!--批量查询-->
-    <select id="queryByIdBatch" resultMap="ClassRealTeacherMap">
+    <select id="queryByClassIdBatch" resultMap="ClassRealTeacherMap">
         select
             id, teacherid, classid, subject, week, startTime, endTime, created_time, updated_time, updated_person
         from class_real_teacher
-        where id in
+        where classid in
         <foreach collection="classesidList" item="classesid" open="(" separator="," close=")">
             #{classesid}
         </foreach>
+    </select>
+
+    <!--通过班级id查询是否还有对应的老师信息-->
+    <select id="haveClassTeacher" resultMap="ClassRealTeacherMap">
+        select count(1)
+        from class_real_teacher
+        where classid = #{classid}
+        limit 1
     </select>
 
 </mapper>
