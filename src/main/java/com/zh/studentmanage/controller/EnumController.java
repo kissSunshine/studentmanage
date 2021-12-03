@@ -32,5 +32,4 @@ public class EnumController {
     public ResponseVo<List<Map<String, String>>> subject(){
         return enumService.enumToListMap(SubjectEnum.values());
     }
-
 }
