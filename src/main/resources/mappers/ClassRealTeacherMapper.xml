@@ -102,9 +102,9 @@
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into class_real_teacher(teacherid, classid, subject, week, startTime, endTime, created_time, updated_time, updated_person)
-        values (#{teacherid}, #{classid}, #{subject}, #{week}, #{starttime}, #{endtime}, #{createdTime}, #{updatedTime}, #{updatedPerson})
+    <insert id="insert">
+        insert into class_real_teacher(id, teacherid, classid, subject, week, startTime, endTime, updated_person)
+        values (#{id}, #{teacherid}, #{classid}, #{subject}, #{week}, #{starttime}, #{endtime}, #{updatedPerson})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -169,8 +169,8 @@
     </update>
 
     <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from class_real_teacher where id = #{id}
+    <delete id="deleteByClassesId">
+        delete from class_real_teacher where classid = #{classesId}
     </delete>
 
     <!--批量查询-->

@@ -1,5 +1,6 @@
 package com.zh.studentmanage.service;
 
+import com.zh.studentmanage.form.ClassesForm;
 import com.zh.studentmanage.pojo.Classes;
 import com.zh.studentmanage.vo.ClassesVo;
 import com.zh.studentmanage.vo.ResponseVo;
@@ -18,10 +19,10 @@ public interface ClassesService {
 
     /**
      * 添加班级
-     * @param classes 班级信息
+     * @param classesForm 班级信息和班级学生信息
      * @return 结果
      */
-    ResponseVo<String> add(Classes classes);
+    ResponseVo<String> add(ClassesForm classesForm);
 
     /**
      * 修改班级
@@ -31,9 +32,9 @@ public interface ClassesService {
     ResponseVo<String> update(Classes classes);
 
     /**
-     * 删除班级
+     * 删除班级和班级教师
      * @param classes 班级信息
      * @return 结果
      */
-    ResponseVo<String> deleteClass(Classes classes);
+    ResponseVo<String> delete(ClassesForm classesForm);
 }

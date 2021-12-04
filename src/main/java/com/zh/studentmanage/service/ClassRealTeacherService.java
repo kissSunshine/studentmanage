@@ -21,7 +21,7 @@ public interface ClassRealTeacherService {
      * @param classRealTeacher 实例对象
      * @return 实例对象
      */
-    ClassRealTeacher insert(ClassRealTeacher classRealTeacher);
+    void insert(ClassRealTeacher classRealTeacher);
 
     /**
      * 修改数据
@@ -37,7 +37,7 @@ public interface ClassRealTeacherService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(String id);
+    void deleteByClassesId(String id);
 
     /**
      * 通过ID查询单条数据

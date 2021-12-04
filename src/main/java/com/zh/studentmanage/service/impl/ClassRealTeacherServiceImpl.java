@@ -32,9 +32,11 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
      * @return 实例对象
      */
     @Override
-    public ClassRealTeacher insert(ClassRealTeacher classRealTeacher) {
-        this.classRealTeacherMapper.insert(classRealTeacher);
-        return classRealTeacher;
+    public void insert(ClassRealTeacher classRealTeacher) {
+        int insertCount = classRealTeacherMapper.insert(classRealTeacher);
+        if (insertCount != 1) {
+            throw new CustomException(ErrorEnum.CLA_R_TEA_ADD_FAIL);
+        }
     }
 
     /**
@@ -52,12 +54,16 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     * @param classesId 主键
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(String id) {
-        return this.classRealTeacherMapper.deleteById(id) > 0;
+    public void deleteByClassesId(String classesId) {
+        int deleteCount = classRealTeacherMapper.deleteByClassesId(classesId);
+        // 每个班都有语数外三名教师
+        if (deleteCount != 3) {
+            throw new CustomException(ErrorEnum.CLA_R_TEA_DELETE_FAIL);
+        }
     }
 
     @Override

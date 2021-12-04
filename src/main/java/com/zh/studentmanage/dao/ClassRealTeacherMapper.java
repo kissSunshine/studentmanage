@@ -67,10 +67,10 @@ public interface ClassRealTeacherMapper {
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     * @param classesId 主键
      * @return 影响行数
      */
-    int deleteById(String id);
+    int deleteByClassesId(String classesId);
 
     /**
      * 根据班级id列表查询班级教师信息
