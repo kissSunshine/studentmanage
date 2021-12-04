@@ -54,50 +54,46 @@ public class ClassesServiceImpl implements ClassesService {
             throw new CustomException(ErrorEnum.CLASSES_NOT_FOUND);
         }
 
-        // 4、为封装班主任名称做准备
-        // 查询职位为班主任的教师
-        Teacher paramClassesMaster = new Teacher();
-        paramClassesMaster.setPosition(PositionEnum.CLASSES_DIRECTOR.getCode());
-        List<Teacher> classesmasterList = classesmasterList = teacherService.queryByParam(paramClassesMaster);
-
-        // 5、为封装教师信息做准备
+        // 4、为封装教师信息做准备
         // 查询班级老师
         List<String> classesIdList = classesList.stream().map(Classes::getId).collect(Collectors.toList());
         List<ClassRealTeacher> classRealTeacherList = classRealTeacherList = classRealTeacherService.queryByClassIdBatch(classesIdList);
-        List<String> subjectTeacherIdList = classRealTeacherList.stream().map(ClassRealTeacher::getTeacherid).collect(Collectors.toList());
-        List<Teacher> subjectTeacherList = teacherService.queryByIdBatch(subjectTeacherIdList);
 
-        // 6、封装班级信息
+        // 5、封装班级信息和班级教师信息
         List<ClassesVo> classesVoList = new ArrayList<>();
         for (Classes one : classesList) {
+            // 班级信息
             ClassesVo classesVo = new ClassesVo();
             BeanUtils.copyProperties(one,classesVo);
-            // 获取班主任的名字
-            for (Teacher master : classesmasterList) {
-                if (master.getId().equals(one.getClassmaster())) {
-                    classesVo.setClassmasterName(master.getNickname());
-                    break;
-                }
-            }
-            // 获取学科老师名字
-            for (Teacher subjectTeacher : subjectTeacherList) {
-                if (subjectTeacher.getSubject().equals(SubjectEnum.YUWEN.getCode())) {
-                    classesVo.setYuwenTeacher(subjectTeacher.getNickname());
-                    break;
-                }
-                if (subjectTeacher.getSubject().equals(SubjectEnum.MATH.getCode())) {
-                    classesVo.setMathTeacher(subjectTeacher.getNickname());
-                    break;
-                }
-                if (subjectTeacher.getSubject().equals(SubjectEnum.ENGLISH.getCode())) {
-                    classesVo.setEnglishTeacher(subjectTeacher.getNickname());
-                    break;
+            // 班级教师信息
+            for (ClassRealTeacher teacher : classRealTeacherList) {
+                // 班级相同
+                if (teacher.getClassid().equals(one.getId())) {
+                    if (teacher.getSubject().equals(SubjectEnum.YUWEN.getCode())) {
+                        classesVo.setYuwen(teacher.getTeacherid());
+                        classesVo.setYuwenWeek(teacher.getWeek());
+                        classesVo.setYuwenStartTime(teacher.getStarttime());
+                        classesVo.setYuwenEndTime(teacher.getEndtime());
+                    }
+                    if (teacher.getSubject().equals(SubjectEnum.MATH.getCode())) {
+                        classesVo.setMath(teacher.getTeacherid());
+                        classesVo.setMathWeek(teacher.getWeek());
+                        classesVo.setMathStartTime(teacher.getStarttime());
+                        classesVo.setMathEndTime(teacher.getEndtime());
+                    }
+                    if (teacher.getSubject().equals(SubjectEnum.ENGLISH.getCode())) {
+                        classesVo.setEnglish(teacher.getTeacherid());
+                        classesVo.setEnglishWeek(teacher.getWeek());
+                        classesVo.setEnglishStartTime(teacher.getStarttime());
+                        classesVo.setEnglishEndTime(teacher.getEndtime());
+                    }
+
                 }
             }
             classesVoList.add(classesVo);
         }
 
-        PageVo pageVo = new PageVo(classesVoList,classesCount);
+        PageVo<List<ClassesVo>> pageVo = new PageVo<>(classesVoList,classesCount);
         return ResponseVo.success("查询成功！", pageVo);
     }
 
