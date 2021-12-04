@@ -1,9 +1,8 @@
 package com.zh.studentmanage.controller;
 
+import com.zh.studentmanage.form.ClassesForm;
 import com.zh.studentmanage.pojo.Classes;
-import com.zh.studentmanage.pojo.School;
 import com.zh.studentmanage.service.ClassesService;
-import com.zh.studentmanage.service.SchoolService;
 import com.zh.studentmanage.vo.ClassesVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,8 @@ public class ClasserController {
     }
 
     @PostMapping("/add")
-    public ResponseVo<String> add(@RequestBody Classes classes) {
-        return classesService.add(classes);
+    public ResponseVo<String> add(@RequestBody ClassesForm classesForm) {
+        return classesService.add(classesForm);
     }
 
     @PostMapping("/update")
@@ -33,8 +32,8 @@ public class ClasserController {
         return classesService.update(classes);
     }
 
-    @PostMapping("/deleteClass")
-    public ResponseVo<String> deleteClass(@RequestBody Classes classes) {
-        return classesService.deleteClass(classes);
+    @PostMapping("/delete")
+    public ResponseVo<String> delete(@RequestBody ClassesForm classesForm) {
+        return classesService.delete(classesForm);
     }
 }

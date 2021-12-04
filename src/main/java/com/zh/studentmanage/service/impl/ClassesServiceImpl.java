@@ -5,6 +5,8 @@ import com.zh.studentmanage.enums.ErrorEnum;
 import com.zh.studentmanage.enums.PositionEnum;
 import com.zh.studentmanage.enums.SubjectEnum;
 import com.zh.studentmanage.exception.CustomException;
+import com.zh.studentmanage.form.ClassesForm;
+import com.zh.studentmanage.pojo.ClassRealStudent;
 import com.zh.studentmanage.pojo.ClassRealTeacher;
 import com.zh.studentmanage.pojo.Classes;
 import com.zh.studentmanage.pojo.Teacher;
@@ -125,25 +127,80 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
-    public ResponseVo<String> add(Classes classes) {
+    public ResponseVo<String> add(ClassesForm classesForm) {
+        // 1、添加班级
+        Classes classes = new Classes();
+        BeanUtils.copyProperties(classesForm, classes);
         // 查询班级名是否已经占用
         Classes classesForQuery = new Classes();
         classesForQuery.setName(classes.getName());
-        List<Classes> classesList = classesMapper.queryByParamLimit(classesForQuery, 1, 1);
+        classesForQuery.setSchoolid(classes.getSchoolid());
+        List<Classes> classesList = classesMapper.queryByParamLimit(classesForQuery, 0, 1);
         if (classesList.size() != 0) {
             throw new CustomException(ErrorEnum.CLASSES_NAME_EXISTS);
         }
 
         // 生成UUID作为主键
-        String id = "Cla" + UUID.randomUUID().toString().replace("-", "");
-        classes.setId(id);
+        String classesId = "Cla" + UUID.randomUUID().toString().replace("-", "");
+        classes.setId(classesId);
 
         // 新增
         int insertCount = classesMapper.insert(classes);
         if (insertCount == 0) {
             throw new CustomException(ErrorEnum.CLASSES_ADD_FAIL);
         }
+
+        // 2、添加班级教师
+        ClassRealTeacher yuwenTeacher = getSubjectTeacher(classesId, classesForm, SubjectEnum.YUWEN.getCode());
+        classRealTeacherService.insert(yuwenTeacher);
+
+        ClassRealTeacher mathTeacher = getSubjectTeacher(classesId, classesForm, SubjectEnum.MATH.getCode());
+        classRealTeacherService.insert(mathTeacher);
+
+        ClassRealTeacher englishTeacher = getSubjectTeacher(classesId, classesForm, SubjectEnum.ENGLISH.getCode());
+        classRealTeacherService.insert(englishTeacher);
+
         return ResponseVo.success("添加班级成功");
+    }
+
+    /**
+     * 根据ClassesForm获取ClassRealTeacher
+     * @param classesId 班级id
+     * @param classesForm 班级表单
+     * @param subject 学科
+     * @return 班级教师
+     */
+    private ClassRealTeacher getSubjectTeacher(String classesId, ClassesForm classesForm, String subject) {
+        ClassRealTeacher classRealTeacher = new ClassRealTeacher();
+        classRealTeacher.setClassid(classesId);
+
+        String id = "CRT" + UUID.randomUUID().toString().replace("-", "");
+        classRealTeacher.setId(id);
+
+        classRealTeacher.setUpdatedPerson(classesForm.getUpdatedPerson());
+
+        if (subject.equals(SubjectEnum.YUWEN.getCode())) {
+            classRealTeacher.setSubject(SubjectEnum.YUWEN.getCode());
+            classRealTeacher.setTeacherid(classesForm.getYuwen());
+            classRealTeacher.setWeek(classesForm.getYuwenWeek());
+            classRealTeacher.setStarttime(classesForm.getYuwenStartTime());
+            classRealTeacher.setEndtime(classesForm.getYuwenEndTime());
+        }
+        if (subject.equals(SubjectEnum.MATH.getCode())) {
+            classRealTeacher.setSubject(SubjectEnum.MATH.getCode());
+            classRealTeacher.setTeacherid(classesForm.getMath());
+            classRealTeacher.setWeek(classesForm.getMathWeek());
+            classRealTeacher.setStarttime(classesForm.getMathStartTime());
+            classRealTeacher.setEndtime(classesForm.getMathEndTime());
+        }
+        if (subject.equals(SubjectEnum.ENGLISH.getCode())) {
+            classRealTeacher.setSubject(SubjectEnum.ENGLISH.getCode());
+            classRealTeacher.setTeacherid(classesForm.getEnglish());
+            classRealTeacher.setWeek(classesForm.getEnglishWeek());
+            classRealTeacher.setStarttime(classesForm.getEnglishStartTime());
+            classRealTeacher.setEndtime(classesForm.getEnglishEndTime());
+        }
+        return classRealTeacher;
     }
 
     @Override
@@ -165,16 +222,16 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
-    public ResponseVo<String> deleteClass(Classes classes) {
-        int classTeacherCount = classRealTeacherService.haveClassTeacher(classes.getId());
-        if (classTeacherCount == 1) {
-            throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_TEACHER);
-        }
-        int classStudentCount = classRealStudentService.haveClassStudent(classes.getId());
+    public ResponseVo<String> delete(ClassesForm classesForm) {
+        // 删除班级前必须删除所有的学生
+        int classStudentCount = classRealStudentService.haveClassStudent(classesForm.getId());
         if (classStudentCount == 1) {
             throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_STUDENT);
         }
-        int deleteCount = classesMapper.deleteById(classes.getId());
+        // 删除班级教师
+        classRealTeacherService.deleteByClassesId(classesForm.getId());
+        // 删除班级
+        int deleteCount = classesMapper.deleteById(classesForm.getId());
         if (deleteCount == 0) {
             throw new CustomException(ErrorEnum.CLASSES_DELETE_FAIL);
         }
