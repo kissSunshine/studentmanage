@@ -20,7 +20,7 @@ public class ClassesVo {
      * Tea + 12位雪花号，教师唯一标识
      */
     private String classmaster;
-    private String classmasterName;
+
     /**
      * Sch + 32位UUID，校区身份唯一标识
      */
@@ -30,13 +30,22 @@ public class ClassesVo {
      */
     private String grade;
 
-    //语文
-    private String yuwenTeacher;
+    //语文教师
+    private String yuwen;
+    private String yuwenWeek;
+    private String yuwenStartTime;
+    private String yuwenEndTime;
 
-    //数学
-    private String mathTeacher;
+    //数学教师
+    private String math;
+    private String mathWeek;
+    private String mathStartTime;
+    private String mathEndTime;
 
-    //英语
-    private String englishTeacher;
+    //英语教师
+    private String english;
+    private String englishWeek;
+    private String englishStartTime;
+    private String englishEndTime;
 
 }
