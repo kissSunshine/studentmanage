@@ -160,7 +160,7 @@
     </delete>
 
     <!--通过班级id查询是否还有对应的老师信息-->
-    <select id="haveClassStudent" resultMap="ClassRealStudentMap">
+    <select id="haveClassStudent" resultType="java.lang.Integer">
         select count(1)
         from studentmanage.class_real_student
         where classid = #{classid}
