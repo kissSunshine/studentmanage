@@ -84,7 +84,7 @@ public interface ClassRealStudentMapper {
      * @param classId 班级id
      * @return 1-有；0-无
      */
-    Integer haveClassStudent(String classId);
+    int haveClassStudent(String classId);
 
 }
 

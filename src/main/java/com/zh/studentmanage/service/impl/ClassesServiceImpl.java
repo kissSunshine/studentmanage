@@ -5,7 +5,6 @@ import com.zh.studentmanage.enums.ErrorEnum;
 import com.zh.studentmanage.enums.PositionEnum;
 import com.zh.studentmanage.enums.SubjectEnum;
 import com.zh.studentmanage.exception.CustomException;
-import com.zh.studentmanage.pojo.Activity;
 import com.zh.studentmanage.pojo.ClassRealTeacher;
 import com.zh.studentmanage.pojo.Classes;
 import com.zh.studentmanage.pojo.Teacher;
@@ -16,7 +15,6 @@ import com.zh.studentmanage.service.TeacherService;
 import com.zh.studentmanage.vo.ClassesVo;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
-import com.zh.studentmanage.vo.TeacherVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -168,11 +166,11 @@ public class ClassesServiceImpl implements ClassesService {
 
     @Override
     public ResponseVo<String> deleteClass(Classes classes) {
-        Integer classTeacherCount = classRealTeacherService.haveClassTeacher(classes.getId());
+        int classTeacherCount = classRealTeacherService.haveClassTeacher(classes.getId());
         if (classTeacherCount == 1) {
             throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_TEACHER);
         }
-        Integer classStudentCount = classRealStudentService.haveClassStudent(classes.getId());
+        int classStudentCount = classRealStudentService.haveClassStudent(classes.getId());
         if (classStudentCount == 1) {
             throw new CustomException(ErrorEnum.CLASSES_DELETE_HAVE_STUDENT);
         }
@@ -182,5 +180,5 @@ public class ClassesServiceImpl implements ClassesService {
         }
         return ResponseVo.success("删除成功！");
     }
-    
+
 }

@@ -70,7 +70,7 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
     }
 
     @Override
-    public Integer haveClassTeacher(String classId) {
+    public int haveClassTeacher(String classId) {
         return classRealTeacherMapper.haveClassTeacher(classId);
     }
 

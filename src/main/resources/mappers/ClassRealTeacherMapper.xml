@@ -185,7 +185,7 @@
     </select>
 
     <!--通过班级id查询是否还有对应的老师信息-->
-    <select id="haveClassTeacher" resultMap="ClassRealTeacherMap">
+    <select id="haveClassTeacher" resultType="java.lang.Integer">
         select count(1)
         from class_real_teacher
         where classid = #{classid}
