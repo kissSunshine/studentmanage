@@ -69,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public ResponseVo deleteById(String id) {
+    public ResponseVo<String> deleteById(String id) {
         int deleteCount = teacherMapper.deleteById(id);
         if(deleteCount == 0){
             return ResponseVo.error("删除教师信息失败！");
