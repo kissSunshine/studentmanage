@@ -19,6 +19,8 @@ import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,44 +53,17 @@ public class ClassesServiceImpl implements ClassesService {
         if (classesList.size() == 0) {
             throw new CustomException(ErrorEnum.CLASSES_NOT_FOUND);
         }
-        // 4、查询职位为班主任的教师
+
+        // 4、为封装班主任名称做准备
+        // 查询职位为班主任的教师
         Teacher paramClassesMaster = new Teacher();
         paramClassesMaster.setPosition(PositionEnum.CLASSES_DIRECTOR.getCode());
-        List<Teacher> classesmasterList = new ArrayList<>();
-        try {
-           classesmasterList = teacherService.queryByParam(paramClassesMaster);
-        } catch (CustomException e) {
-            if (e.getCode().equals(ErrorEnum.TEACHER_NOT_FOUND)) {
-                throw new CustomException(ErrorEnum.CLASSES_NOT_FOUND);
-            }
-        }
-        // 5、查询学科老师
-        List<String> classesIdList = classesList.stream().map(Classes::getId).collect(Collectors.toList());
-        List<ClassRealTeacher> classRealTeacherList = new ArrayList<>();
-        try {
-            classRealTeacherList = classRealTeacherService.queryByClassIdBatch(classesIdList);
-        } catch (CustomException e) {
-            if (e.getCode().equals(ErrorEnum.CLA_R_TEA_NOT_FOUND.getCode())) {
-                // 5.1、如果是刚刚添加班级信息，还没有教师和学生，则只需要封装班级主要信息，直接返回
-                List<ClassesVo> classesVoList = new ArrayList<>();
-                for (Classes one : classesList) {
-                    ClassesVo classesVo = new ClassesVo();
-                    BeanUtils.copyProperties(one,classesVo);
-                    // 获取班主任的名字
-                    for (Teacher master : classesmasterList) {
-                        if (master.getId().equals(one.getClassmaster())) {
-                            classesVo.setClassmasterName(master.getNickname());
-                            break;
-                        }
-                    }
-                    classesVoList.add(classesVo);
-                }
-                PageVo pageVo = new PageVo(classesVoList,classesCount);
-                return ResponseVo.success("查询成功！", pageVo);
-            }
-        }
+        List<Teacher> classesmasterList = classesmasterList = teacherService.queryByParam(paramClassesMaster);
 
-        // 5.2、有学科教师信息
+        // 5、为封装教师信息做准备
+        // 查询班级老师
+        List<String> classesIdList = classesList.stream().map(Classes::getId).collect(Collectors.toList());
+        List<ClassRealTeacher> classRealTeacherList = classRealTeacherList = classRealTeacherService.queryByClassIdBatch(classesIdList);
         List<String> subjectTeacherIdList = classRealTeacherList.stream().map(ClassRealTeacher::getTeacherid).collect(Collectors.toList());
         List<Teacher> subjectTeacherList = teacherService.queryByIdBatch(subjectTeacherIdList);
 
@@ -127,6 +102,7 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
+    @Transactional
     public ResponseVo<String> add(ClassesForm classesForm) {
         // 1、添加班级
         Classes classes = new Classes();
