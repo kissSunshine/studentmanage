@@ -51,4 +51,7 @@ public class ClassesVo {
     private String englishStartTime;
     private String englishEndTime;
 
+    // 学生人数
+    private int studentCount;
+
 }
