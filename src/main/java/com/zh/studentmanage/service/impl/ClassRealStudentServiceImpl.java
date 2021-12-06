@@ -14,14 +14,14 @@ public class ClassRealStudentServiceImpl implements ClassRealStudentService {
     private ClassRealStudentMapper classRealStudentMapper;
 
     /**
-     * 通过ID查询单条数据
+     * 通过班级id查询班级学生信息
      *
-     * @param id 主键
+     * @param classesId 班级id
      * @return 实例对象
      */
     @Override
-    public ClassRealStudent queryById(String id) {
-        return this.classRealStudentMapper.queryById(id);
+    public List<ClassRealStudent> queryByClassesId(String classesId) {
+        return classRealStudentMapper.queryByClassesId(classesId);
     }
 
     /**
@@ -56,8 +56,7 @@ public class ClassRealStudentServiceImpl implements ClassRealStudentService {
      */
     @Override
     public ClassRealStudent update(ClassRealStudent classRealStudent) {
-        this.classRealStudentMapper.update(classRealStudent);
-        return this.queryById(classRealStudent.getId());
+        return null;
     }
 
     /**
@@ -75,4 +74,10 @@ public class ClassRealStudentServiceImpl implements ClassRealStudentService {
     public int haveClassStudent(String classId) {
         return classRealStudentMapper.haveClassStudent(classId);
     }
+
+    @Override
+    public int queryCountByClassesId(String classesId) {
+        return classRealStudentMapper.queryCountByClassesId(classesId);
+    }
+
 }
