@@ -14,12 +14,12 @@ import java.util.List;
 public interface ClassRealStudentMapper {
 
     /**
-     * 通过ID查询单条数据
+     * 通过班级id查询班级学生信息
      *
-     * @param id 主键
+     * @param classesId 班级id
      * @return 实例对象
      */
-    ClassRealStudent queryById(String id);
+    List<ClassRealStudent> queryByClassesId(String classesId);
 
     /**
      * 查询指定行数据
@@ -85,6 +85,14 @@ public interface ClassRealStudentMapper {
      * @return 1-有；0-无
      */
     int haveClassStudent(String classId);
+
+    /**
+     * 通过班级id查询班级人数
+     * @param classesId 班级id
+     * @return 人数
+     */
+    int queryCountByClassesId(String classesId);
+
 
 }
 

@@ -7,16 +7,13 @@
         <result property="studentid" column="studentid" jdbcType="CHAR"/>
         <result property="classid" column="classid" jdbcType="CHAR"/>
         <result property="subject" column="subject" jdbcType="CHAR"/>
-        <result property="week" column="week" jdbcType="CHAR"/>
-        <result property="starttime" column="startTime" jdbcType="CHAR"/>
-        <result property="endtime" column="endTime" jdbcType="CHAR"/>
         <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
         <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
         <result property="updatedPerson" column="updated_person" jdbcType="CHAR"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="ClassRealStudentMap">
+    <!--查询-->
+    <select id="queryByClassesId" resultMap="ClassRealStudentMap">
         select id,
                studentid,
                classid,
@@ -25,7 +22,7 @@
                updated_time,
                updated_person
         from studentmanage.class_real_student
-        where id = #{id}
+        where id = #{classesId}
     </select>
 
     <!--查询指定行数据-->
@@ -139,6 +136,13 @@
         from studentmanage.class_real_student
         where classid = #{classid}
         limit 1
+    </select>
+
+    <!--查询-->
+    <select id="queryCountByClassesId" resultType="java.lang.Integer">
+        select count(1)
+        from studentmanage.class_real_student
+        where id = #{classesId}
     </select>
 
 </mapper>

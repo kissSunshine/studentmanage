@@ -2,18 +2,12 @@ package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.ClassesMapper;
 import com.zh.studentmanage.enums.ErrorEnum;
-import com.zh.studentmanage.enums.PositionEnum;
 import com.zh.studentmanage.enums.SubjectEnum;
 import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.form.ClassesForm;
-import com.zh.studentmanage.pojo.ClassRealStudent;
 import com.zh.studentmanage.pojo.ClassRealTeacher;
 import com.zh.studentmanage.pojo.Classes;
-import com.zh.studentmanage.pojo.Teacher;
-import com.zh.studentmanage.service.ClassRealStudentService;
-import com.zh.studentmanage.service.ClassRealTeacherService;
-import com.zh.studentmanage.service.ClassesService;
-import com.zh.studentmanage.service.TeacherService;
+import com.zh.studentmanage.service.*;
 import com.zh.studentmanage.vo.ClassesVo;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
@@ -57,7 +51,14 @@ public class ClassesServiceImpl implements ClassesService {
         List<String> classesIdList = classesList.stream().map(Classes::getId).collect(Collectors.toList());
         List<ClassRealTeacher> classRealTeacherList =  classRealTeacherService.queryByClassIdBatch(classesIdList);
 
-        // 5、封装班级信息和班级教师信息
+        // 5、学生人数
+        Map<String, Integer> studentCountMap = new HashMap<>();
+        for (String classesId : classesIdList) {
+            int count = classRealStudentService.queryCountByClassesId(classesId);
+            studentCountMap.put(classesId, count);
+        }
+
+        // 6、封装班级信息和班级教师信息
         List<ClassesVo> classesVoList = new ArrayList<>();
         for (Classes one : classesList) {
             // 班级信息
@@ -91,6 +92,14 @@ public class ClassesServiceImpl implements ClassesService {
 
                 }
             }
+            // 班级学生人数
+            for (Map.Entry<String,Integer> map: studentCountMap.entrySet()) {
+                if (classesVo.getId().equals(map.getKey())) {
+                    classesVo.setStudentCount(map.getValue());
+                    break;
+                }
+            }
+
             classesVoList.add(classesVo);
         }
 

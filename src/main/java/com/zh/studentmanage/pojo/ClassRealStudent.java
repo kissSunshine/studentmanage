@@ -25,18 +25,6 @@ public class ClassRealStudent implements Serializable {
      */
     private String subject;
     /**
-     * 上课日期：比如 1-周一
-     */
-    private String week;
-    /**
-     * 开始时间:形如 08：30：00
-     */
-    private Object starttime;
-    /**
-     * 结束时间:形如 08：30：00
-     */
-    private Object endtime;
-    /**
      * 创建时间
      */
     private Date createdTime;
