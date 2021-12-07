@@ -14,8 +14,9 @@ public enum ErrorEnum implements EnumInterface {
     CLASSES_DELETE_FAIL("ClaErr06", "删除班级失败"),
 
     CLA_R_TEA_NOT_FOUND("CRT01", "未查询到符合条件的班级教师信息"),
-    CLA_R_TEA_ADD_FAIL("CRT02", "添加班级教师失败"),
-    CLA_R_TEA_DELETE_FAIL("CRT03", "删除班级教师失败"),
+    CLA_R_TEA_ADD_UPDATE_FAIL("CRT02", "添加或更新班级教师失败！"),
+    CLA_R_TEA_ADD_TEACHERLIST_NULL("CRT03", "缺少班级教师信息！"),
+    CLA_R_TEA_DELETE_FAIL("CRT04", "删除班级教师失败"),
     ;
 
     private final String code;

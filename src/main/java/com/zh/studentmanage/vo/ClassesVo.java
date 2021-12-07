@@ -31,18 +31,21 @@ public class ClassesVo {
     private String grade;
 
     //语文教师
+    private String yuwenCRTID;
     private String yuwen;
     private String yuwenWeek;
     private String yuwenStartTime;
     private String yuwenEndTime;
 
     //数学教师
+    private String mathCRTID;
     private String math;
     private String mathWeek;
     private String mathStartTime;
     private String mathEndTime;
 
     //英语教师
+    private String englishCRTID;
     private String english;
     private String englishWeek;
     private String englishStartTime;

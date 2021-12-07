@@ -35,7 +35,7 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
     public void insert(ClassRealTeacher classRealTeacher) {
         int insertCount = classRealTeacherMapper.insert(classRealTeacher);
         if (insertCount != 1) {
-            throw new CustomException(ErrorEnum.CLA_R_TEA_ADD_FAIL);
+            throw new CustomException(ErrorEnum.CLA_R_TEA_ADD_UPDATE_FAIL);
         }
     }
 
@@ -78,6 +78,18 @@ public class ClassRealTeacherServiceImpl implements ClassRealTeacherService {
     @Override
     public int haveClassTeacher(String classId) {
         return classRealTeacherMapper.haveClassTeacher(classId);
+    }
+
+    @Override
+    public void insertOrUpdateBatch(List<ClassRealTeacher> teacherList) {
+        if (null == teacherList) {
+            throw new CustomException(ErrorEnum.CLA_R_TEA_ADD_TEACHERLIST_NULL);
+        }
+        int count = classRealTeacherMapper.insertOrUpdateBatch(teacherList);
+        // 目前每个班级都应有3个教师
+        if (count <0) {
+            throw new CustomException(ErrorEnum.CLA_R_TEA_ADD_UPDATE_FAIL);
+        }
     }
 
 

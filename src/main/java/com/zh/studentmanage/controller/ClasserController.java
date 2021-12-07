@@ -28,8 +28,8 @@ public class ClasserController {
     }
 
     @PostMapping("/update")
-    public ResponseVo<String> update(@RequestBody Classes classes) {
-        return classesService.update(classes);
+    public ResponseVo<String> update(@RequestBody ClassesForm classesForm) {
+        return classesService.update(classesForm);
     }
 
     @PostMapping("/delete")
