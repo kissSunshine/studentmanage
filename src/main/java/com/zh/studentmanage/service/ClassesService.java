@@ -26,14 +26,14 @@ public interface ClassesService {
 
     /**
      * 修改班级
-     * @param classes 班级信息
+     * @param classesForm 班级信息
      * @return 结果
      */
-    ResponseVo<String> update(Classes classes);
+    ResponseVo<String> update(ClassesForm classesForm);
 
     /**
      * 删除班级和班级教师
-     * @param classes 班级信息
+     * @param classesForm 班级信息
      * @return 结果
      */
     ResponseVo<String> delete(ClassesForm classesForm);

@@ -115,11 +115,12 @@
         </foreach>
     </insert>
 
-    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into class_real_teacher(teacherid, classid, subject, week, startTime, endTime, created_time, updated_time, updated_person)
+
+    <insert id="insertOrUpdateBatch">
+        insert into class_real_teacher(id, teacherid, classid, subject, week, startTime, endTime, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.teacherid}, #{entity.classid}, #{entity.subject}, #{entity.week}, #{entity.starttime}, #{entity.endtime}, #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
+            (#{entity.id}, #{entity.teacherid}, #{entity.classid}, #{entity.subject}, #{entity.week}, #{entity.starttime}, #{entity.endtime}, #{entity.updatedPerson})
         </foreach>
         on duplicate key update
         teacherid = values(teacherid),
@@ -128,8 +129,6 @@
         week = values(week),
         startTime = values(startTime),
         endTime = values(endTime),
-        created_time = values(created_time),
-        updated_time = values(updated_time),
         updated_person = values(updated_person)
     </insert>
 

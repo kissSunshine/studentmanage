@@ -53,4 +53,11 @@ public interface ClassRealTeacherService {
      * @return 1-有；0-无
      */
     int haveClassTeacher(String classId);
+
+    /**
+     * 批量新增或更新数据
+     *
+     * @param teacherList 实例对象
+     */
+    void insertOrUpdateBatch(List<ClassRealTeacher> teacherList);
 }
