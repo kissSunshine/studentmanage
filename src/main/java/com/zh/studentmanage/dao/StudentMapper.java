@@ -86,7 +86,7 @@ public interface StudentMapper {
      * @param student 实例对象
      * @return 对象列表
      */
-    List<Student> queryByParamLimit(@Param("student")Student student, @Param("offset") int offset, @Param("limit") int limit);
+    List<Student> queryByParamLimit(@Param("student")Student student, @Param("offset") Integer offset, @Param("limit") Integer limit);
 
     /**
      * 根据条件查询学生记录总数

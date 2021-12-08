@@ -17,6 +17,8 @@ public enum ErrorEnum implements EnumInterface {
     CLA_R_TEA_ADD_UPDATE_FAIL("CRT02", "添加或更新班级教师失败！"),
     CLA_R_TEA_ADD_TEACHERLIST_NULL("CRT03", "缺少班级教师信息！"),
     CLA_R_TEA_DELETE_FAIL("CRT04", "删除班级教师失败"),
+
+    STUDENT_NO_ONE("StuErr01", "还没添加过学生，没有学生信息！"),
     ;
 
     private final String code;
