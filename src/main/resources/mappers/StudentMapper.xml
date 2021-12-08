@@ -230,7 +230,9 @@
             </if>
         </where>
         order by updated_time desc
-        limit #{offset}, #{limit}
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
     </select>
 
     <!--查询学生记录总数-->

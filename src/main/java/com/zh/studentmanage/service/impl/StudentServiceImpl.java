@@ -1,6 +1,9 @@
 package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.StudentMapper;
+import com.zh.studentmanage.enums.ErrorEnum;
+import com.zh.studentmanage.enums.PageEnum;
+import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.StudentService;
@@ -14,9 +17,7 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -94,20 +95,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ResponseVo<Student> queryByParam(Student student, int currentPage, int pageSize) {
-        // 1、查询学生记录总数
-        Integer studentCount = studentMapper.queryCount(student);
-        if (studentCount == null) {
-            return ResponseVo.error("查询学生信息失败！");
-        }
-        // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
-        // 偏移数量 = 当前页码 × 每页显示数量
-        int offset = (currentPage - 1) * pageSize;
-        // 3、查询
-        List<Student> studentList = studentMapper.queryByParamLimit(student, offset, pageSize);
-        if (studentList == null) {
-            return ResponseVo.error("查询学生信息失败！");
-        }
+    public ResponseVo<Student> queryForPage(Student student, int currentPage, int pageSize) {
+        Map<Enum, Object> studentMap = queryByParamLimit(student, currentPage, pageSize);
+        List<Student> studentList = (List<Student>) studentMap.get(PageEnum.DATA);
+
         // 4、封装VO对象
         List<StudentVo> studentVoList = new ArrayList<>();
         for (Student stu : studentList) {
@@ -129,9 +120,31 @@ public class StudentServiceImpl implements StudentService {
             studentVoList.add(studentVo);
         }
         // 5.封装分页数据
-        PageVo<List<StudentVo>> studentListPageVo = new PageVo<>(studentVoList, studentCount);
+        PageVo<List<StudentVo>> studentListPageVo = new PageVo<>(studentVoList, (int)studentMap.get(PageEnum.TOTAL));
 
         return ResponseVo.success("查询成功", studentListPageVo);
+    }
+
+    @Override
+    public Map<Enum, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize) {
+        // 1、查询学生记录总数
+        int studentCount = studentMapper.queryCount(student);
+        if (studentCount == 0) {
+            throw new CustomException(ErrorEnum.STUDENT_NO_ONE);
+        }
+
+        // 2、计算 sql中 limit 的偏移数offset、查询记录数limit
+        // 偏移数量 = 当前页码 × 每页显示数量
+        Integer offset = null;
+        if (currentPage != null && pageSize != null) {
+            offset = (currentPage - 1) * pageSize;
+        }
+        // 3、查询
+        List<Student> studentList = studentMapper.queryByParamLimit(student, offset, pageSize);
+        Map<Enum, Object> map = new HashMap<>();
+        map.put(PageEnum.TOTAL, studentCount);
+        map.put(PageEnum.DATA, studentList);
+        return map;
     }
 
     @Override

@@ -4,6 +4,9 @@ import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.vo.ResponseVo;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * (Student)表服务接口
  *
@@ -54,14 +57,24 @@ public interface StudentService {
     ResponseVo<String> changeStatusById(String id,Integer status);
 
     /**
-     * 通过重要因素查询
+     * 通过重要因素分页查询
      *
      * @param student     学生信息
      * @param currentPage 当前页
      * @param pageSize    每页数据量
      * @return 学生数据
      */
-    ResponseVo<Student> queryByParam(Student student, int currentPage, int pageSize);
+    ResponseVo<Student> queryForPage(Student student, int currentPage, int pageSize);
+
+    /**
+     * 通过重要因素分页查询
+     *
+     * @param student     学生信息
+     * @param currentPage 当前页
+     * @param pageSize    每页数据量
+     * @return map,包含总数和查出的学生信息
+     */
+    Map<Enum, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize);
 
     /**
      * 登录
