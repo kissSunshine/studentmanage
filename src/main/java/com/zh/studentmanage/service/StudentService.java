@@ -1,5 +1,6 @@
 package com.zh.studentmanage.service;
 
+import com.zh.studentmanage.excelexport.StudentExport;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.vo.ResponseVo;
@@ -74,7 +75,7 @@ public interface StudentService {
      * @param pageSize    每页数据量
      * @return map,包含总数和查出的学生信息
      */
-    Map<Enum, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize);
+    Map<String, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize);
 
     /**
      * 登录
@@ -82,4 +83,12 @@ public interface StudentService {
      * @return 返回登录的学生信息
      */
     ResponseVo<Student> login(User user);
+
+    /**
+     * 通过student条件查询，并导出所有数据
+     * @param student 查询条件
+     * @return 需要导出的学生数据
+     */
+    List<StudentExport> export(Student student);
+
 }

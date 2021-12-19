@@ -51,25 +51,13 @@ public class StudentController {
     }
 
     @GetMapping("/export")
-    public void export(Student student, HttpServletResponse response) {
-        Map<Enum, Object> studentMap = studentService.queryByParamLimit(student, null, null);
-        List<Student> studentList = (List<Student>) studentMap.get(PageEnum.DATA);
-        List<StudentExport> studentExportList = new ArrayList<>();
-        for (Student one : studentList) {
-            StudentExport studentExport = new StudentExport();
-            BeanUtils.copyProperties(one, studentExport);
+    public ResponseVo<String> export(Student student, HttpServletResponse response) {
+        // 查询出需要导出的数据
+        List<StudentExport> studentExportList = studentService.export(student);
 
-            // 性别
-            studentExport.setGenderName(studentExport.getGenderEnum().getGender());
-            // 状态
-            studentExport.setStatusName(studentExport.getStatusEnum().getName());
-            // 校区
-            studentExport.setSchoolName(studentExport.getSchoolEnum().getName());
-
-            studentExportList.add(studentExport);
-        }
-
+        // 表名  sheet名  excel类型
         ExportParams params = new ExportParams("学生表", "学生表", ExcelType.HSSF);
+        // 参数  需要导出的类  数据list
         Workbook workbook = ExcelExportUtil.exportExcel(params, StudentExport.class, studentExportList);
         ServletOutputStream out = null;
         try {
@@ -77,6 +65,8 @@ public class StudentController {
             response.setHeader("content-type","application/octet-stream");
             // 防止中文乱码
             response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode("员工表.xls", "UTF-8"));
+            // 将content-disposition暴露给前端，前端代码才可以拿到值
+            response.setHeader("Access-Control-Expose-Headers","content-disposition");
             out = response.getOutputStream();
             workbook.write(out);
         } catch (IOException e) {
@@ -90,6 +80,8 @@ public class StudentController {
                 }
             }
         }
+
+        return ResponseVo.success("导出成功");
     }
 
 }
