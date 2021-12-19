@@ -3,6 +3,7 @@ package com.zh.studentmanage.service.impl;
 import com.zh.studentmanage.dao.StudentMapper;
 import com.zh.studentmanage.enums.ErrorEnum;
 import com.zh.studentmanage.enums.PageEnum;
+import com.zh.studentmanage.excelexport.StudentExport;
 import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
@@ -96,8 +97,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseVo<Student> queryForPage(Student student, int currentPage, int pageSize) {
-        Map<Enum, Object> studentMap = queryByParamLimit(student, currentPage, pageSize);
-        List<Student> studentList = (List<Student>) studentMap.get(PageEnum.DATA);
+        Map<String, Object> studentMap = queryByParamLimit(student, currentPage, pageSize);
+        List<Student> studentList = (List<Student>) studentMap.get(PageEnum.DATA.getCode());
 
         // 4、封装VO对象
         List<StudentVo> studentVoList = new ArrayList<>();
@@ -120,13 +121,13 @@ public class StudentServiceImpl implements StudentService {
             studentVoList.add(studentVo);
         }
         // 5.封装分页数据
-        PageVo<List<StudentVo>> studentListPageVo = new PageVo<>(studentVoList, (int)studentMap.get(PageEnum.TOTAL));
+        PageVo<List<StudentVo>> studentListPageVo = new PageVo<>(studentVoList, (int)studentMap.get(PageEnum.TOTAL.getCode()));
 
         return ResponseVo.success("查询成功", studentListPageVo);
     }
 
     @Override
-    public Map<Enum, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize) {
+    public Map<String, Object> queryByParamLimit(Student student, Integer currentPage, Integer pageSize) {
         // 1、查询学生记录总数
         int studentCount = studentMapper.queryCount(student);
         if (studentCount == 0) {
@@ -141,9 +142,9 @@ public class StudentServiceImpl implements StudentService {
         }
         // 3、查询
         List<Student> studentList = studentMapper.queryByParamLimit(student, offset, pageSize);
-        Map<Enum, Object> map = new HashMap<>();
-        map.put(PageEnum.TOTAL, studentCount);
-        map.put(PageEnum.DATA, studentList);
+        Map<String, Object> map = new HashMap<>();
+        map.put(PageEnum.TOTAL.getCode(), studentCount);
+        map.put(PageEnum.DATA.getCode(), studentList);
         return map;
     }
 
@@ -163,5 +164,24 @@ public class StudentServiceImpl implements StudentService {
         return ResponseVo.success("登录成功！",student);
     }
 
+    @Override
+    public List<StudentExport> export(Student student) {
+        Map<String, Object> studentMap = queryByParamLimit(student, null, null);
+        List<Student> studentList = (List<Student>) studentMap.get(PageEnum.DATA.getCode());
+        List<StudentExport> studentExportList = new ArrayList<>();
+        for (Student one : studentList) {
+            StudentExport studentExport = new StudentExport();
+            BeanUtils.copyProperties(one, studentExport);
 
+            // 性别
+            studentExport.setGenderName(studentExport.getGenderEnum().getGender());
+            // 状态
+            studentExport.setStatusName(studentExport.getStatusEnum().getName());
+            // 校区
+            studentExport.setSchoolName(studentExport.getSchoolEnum().getName());
+
+            studentExportList.add(studentExport);
+        }
+        return studentExportList;
+    }
 }
