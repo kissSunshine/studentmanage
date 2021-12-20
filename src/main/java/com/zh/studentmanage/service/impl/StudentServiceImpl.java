@@ -7,6 +7,7 @@ import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.pojo.User;
 import com.zh.studentmanage.service.StudentService;
+import com.zh.studentmanage.utils.TimeUtil;
 import com.zh.studentmanage.vo.PageVo;
 import com.zh.studentmanage.vo.ResponseVo;
 import com.zh.studentmanage.vo.StudentVo;
@@ -17,7 +18,6 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -25,6 +25,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Resource
     private StudentMapper studentMapper;
+    @Resource
+    private TimeUtil timeUtil;
 
     @Override
     public Student queryById(String id) {
@@ -189,14 +191,14 @@ public class StudentServiceImpl implements StudentService {
     public ResponseVo<String> importStudents(List<StudentExport> studentExportList) {
         // 1、校验数据非空、是否按规则填写
         for (StudentExport studentExport : studentExportList) {
-            if (null == studentExport.getName() || "".equals(studentExport.getName())) {
+            if (null == studentExport.getName()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_NAME_EMPTY);
             }
             if (studentExport.getName().length() > 20) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_NAME_LENGTH.getCode(),(studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_NAME_LENGTH.getMessage())));
             }
 
-            if (null == studentExport.getNickname() || "".equals(studentExport.getNickname())) {
+            if (null == studentExport.getNickname()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_NICKNAME_EMPTY);
             }
             if (studentExport.getNickname().length() > 20) {
@@ -206,18 +208,18 @@ public class StudentServiceImpl implements StudentService {
             if (null == studentExport.getBirthday()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_EMPTY.getMessage())));
             }
-            int diffDay = LocalDate.now().compareTo(studentExport.getBirthday());
-            if (diffDay < 0) {
+            Integer diffDay = timeUtil.dateCompareNow(studentExport.getBirthday());
+            if (null == diffDay || diffDay < 0) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_ERROR.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_ERROR.getMessage())));
             }
 
-            if (null == studentExport.getGenderName() || "".equals(studentExport.getGenderName())) {
+            if (null == studentExport.getGenderName()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_GENDER_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_GENDER_EMPTY.getMessage())));
             }
-            if (null == studentExport.getSchoolName() || "".equals(studentExport.getSchoolName())) {
+            if (null == studentExport.getSchoolName()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_SCHOOL_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_SCHOOL_EMPTY.getMessage())));
             }
-            if (null == studentExport.getPhone() || "".equals(studentExport.getPhone())) {
+            if (null == studentExport.getPhone()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getMessage())));
             }
             if (null == studentExport.getStatus()) {

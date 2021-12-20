@@ -27,7 +27,7 @@ public class StudentExport {
      * 形如：2021-10-01
      */
     @Excel(name = "出生日期",format = "yyyy-mm-dd",width = 15)
-    private LocalDate birthday;
+    private String birthday;
     /**
      * 0-女；1-男
      */
