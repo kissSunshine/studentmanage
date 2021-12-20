@@ -279,6 +279,7 @@ public class StudentServiceImpl implements StudentService {
             studentList.add(student);
         }
 
+        // 4、插入数据
         int count = studentMapper.insertBatch(studentList);
         if (count != studentList.size()) {
             throw new CustomException(ErrorEnum.STUDENT_IMPORT_ERROR);
