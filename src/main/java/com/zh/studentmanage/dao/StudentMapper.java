@@ -81,6 +81,14 @@ public interface StudentMapper {
     Student queryByNickname(String nickname);
 
     /**
+     * 通过昵称查询单条数据
+     *
+     * @param nicknameList 昵称
+     * @return 实例对象
+     */
+    List<Student> queryByNicknameList(@Param("nicknameList") List<String> nicknameList);
+
+    /**
      * 通过实体作为筛选条件，分页查询
      *
      * @param student 实例对象

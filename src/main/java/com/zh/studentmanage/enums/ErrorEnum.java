@@ -33,6 +33,7 @@ public enum ErrorEnum implements EnumInterface {
     STUDENT_IMPORT_STATUS_ERROR("StuErr13", "状态填写有误"),
     STUDENT_IMPORT_BIRTHDAY_ERROR("StuErr14", "生日填写有误"),
     STUDENT_IMPORT_ERROR("StuErr15", "导入数据库时出错"),
+    STUDENT_IMPORT_NICKNAME_AGAIN("StuErr16", "昵称重复"),
     ;
 
     private final String code;

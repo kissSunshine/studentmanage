@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -222,11 +223,19 @@ public class StudentServiceImpl implements StudentService {
             if (null == studentExport.getPhone()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getMessage())));
             }
-            if (null == studentExport.getStatus()) {
+            if (null == studentExport.getStatusName()) {
                 throw new CustomException(ErrorEnum.STUDENT_IMPORT_STATUS_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_STATUS_EMPTY.getMessage())));
             }
         }
-        // 2、StudentExport转为Student
+        // 2、校验昵称唯一
+        List<String> nicknameList = studentExportList.stream().map(StudentExport::getNickname).collect(Collectors.toList());
+        List<Student> resultList = studentMapper.queryByNicknameList(nicknameList);
+        if (resultList.size() > 0) {
+            String nicknames = resultList.stream().map(Student::getNickname).collect(Collectors.joining(",","[","]"));
+            throw new CustomException(ErrorEnum.STUDENT_IMPORT_NICKNAME_AGAIN.getCode(), (nicknames.concat("：").concat(ErrorEnum.STUDENT_IMPORT_NICKNAME_AGAIN.getMessage())));
+        }
+
+        // 3、StudentExport转为Student
         List<Student> studentList = new ArrayList<>();
         for (StudentExport studentExport : studentExportList) {
             Student student = new Student();

@@ -201,6 +201,29 @@
         where nickname = #{nickname}
     </select>
 
+    <!--通过昵称查询单条数据-->
+    <select id="queryByNicknameList" resultMap="StudentMap">
+        select id,
+               name,
+               nickname,
+               password,
+               birthday,
+               gender,
+               idCard,
+               schoolid,
+               phone,
+               homeAddress,
+               status,
+               created_time,
+               updated_time,
+               updated_person
+        from studentmanage.student
+        where nickname in
+        <foreach collection="nicknameList" item="nickname" open="(" separator="," close=")">
+            #{nickname}
+        </foreach>
+    </select>
+
     <!--通过实体作为筛选条件查询-->
     <select id="queryByParamLimit" resultMap="StudentMap">
         select
