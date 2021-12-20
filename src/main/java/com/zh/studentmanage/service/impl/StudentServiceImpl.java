@@ -1,8 +1,7 @@
 package com.zh.studentmanage.service.impl;
 
 import com.zh.studentmanage.dao.StudentMapper;
-import com.zh.studentmanage.enums.ErrorEnum;
-import com.zh.studentmanage.enums.PageEnum;
+import com.zh.studentmanage.enums.*;
 import com.zh.studentmanage.excelexport.StudentExport;
 import com.zh.studentmanage.exception.CustomException;
 import com.zh.studentmanage.pojo.Student;
@@ -18,6 +17,7 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -183,5 +183,96 @@ public class StudentServiceImpl implements StudentService {
             studentExportList.add(studentExport);
         }
         return studentExportList;
+    }
+
+    @Override
+    public ResponseVo<String> importStudents(List<StudentExport> studentExportList) {
+        // 1、校验数据非空、是否按规则填写
+        for (StudentExport studentExport : studentExportList) {
+            if (null == studentExport.getName() || "".equals(studentExport.getName())) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_NAME_EMPTY);
+            }
+            if (studentExport.getName().length() > 20) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_NAME_LENGTH.getCode(),(studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_NAME_LENGTH.getMessage())));
+            }
+
+            if (null == studentExport.getNickname() || "".equals(studentExport.getNickname())) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_NICKNAME_EMPTY);
+            }
+            if (studentExport.getNickname().length() > 20) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_NICKNAME_LENGTH.getCode(),(studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_NICKNAME_LENGTH.getMessage())));
+            }
+
+            if (null == studentExport.getBirthday()) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_EMPTY.getMessage())));
+            }
+            int diffDay = LocalDate.now().compareTo(studentExport.getBirthday());
+            if (diffDay < 0) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_ERROR.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_BIRTHDAY_ERROR.getMessage())));
+            }
+
+            if (null == studentExport.getGenderName() || "".equals(studentExport.getGenderName())) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_GENDER_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_GENDER_EMPTY.getMessage())));
+            }
+            if (null == studentExport.getSchoolName() || "".equals(studentExport.getSchoolName())) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_SCHOOL_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_SCHOOL_EMPTY.getMessage())));
+            }
+            if (null == studentExport.getPhone() || "".equals(studentExport.getPhone())) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_PHONE_EMPTY.getMessage())));
+            }
+            if (null == studentExport.getStatus()) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_STATUS_EMPTY.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_STATUS_EMPTY.getMessage())));
+            }
+        }
+        // 2、StudentExport转为Student
+        List<Student> studentList = new ArrayList<>();
+        for (StudentExport studentExport : studentExportList) {
+            Student student = new Student();
+            BeanUtils.copyProperties(studentExport, student);
+            // 性别转为编码
+            for (GenderEnum genderEnum : GenderEnum.values()) {
+                if (studentExport.getGenderName().equals(genderEnum.getGender())) {
+                    student.setGender(genderEnum.getCode());
+                    break;
+                }
+            }
+            if (null == student.getGender()) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_GENDER_ERROR.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_GENDER_ERROR.getMessage())));
+            }
+            // 校区转为编码
+            for (SchoolEnum schoolEnum : SchoolEnum.values()) {
+                if (studentExport.getSchoolName().equals(schoolEnum.getName())) {
+                    student.setSchoolid(schoolEnum.getCode());
+                    break;
+                }
+            }
+            if (null == student.getSchoolid()) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_SCHOOL_ERROR.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_SCHOOL_ERROR.getMessage())));
+            }
+            // 状态转为编码
+            for (StatusEnum statusEnum : StatusEnum.values()) {
+                if (studentExport.getStatusName().equals(statusEnum.getName())) {
+                    student.setStatus(statusEnum.getCode());
+                    break;
+                }
+            }
+            if (null == student.getStatus()) {
+                throw new CustomException(ErrorEnum.STUDENT_IMPORT_STATUS_ERROR.getCode(), (studentExport.getName().concat("：").concat(ErrorEnum.STUDENT_IMPORT_STATUS_ERROR.getMessage())));
+            }
+            // 初始密码为手机号
+            student.setPassword(DigestUtils.md5DigestAsHex(studentExport.getPhone().getBytes(StandardCharsets.UTF_8)));
+
+            // 生成UUID作为主键
+            String id = "Stu" + UUID.randomUUID().toString().replace("-", "");
+            student.setId(id);
+            studentList.add(student);
+        }
+
+        int count = studentMapper.insertBatch(studentList);
+        if (count != studentList.size()) {
+            throw new CustomException(ErrorEnum.STUDENT_IMPORT_ERROR);
+        }
+
+        return ResponseVo.success("导入成功");
     }
 }

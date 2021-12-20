@@ -92,12 +92,14 @@ public class StudentController {
         ImportParams importParams = new ImportParams();
         // 标题行
         importParams.setTitleRows(1);
+
+        List<StudentExport> studentExportList = new ArrayList<>();
         try {
-            List<StudentExport> studentExports = ExcelImportUtil.importExcel(multipartFile.getInputStream(), StudentExport.class, importParams);
-            studentExports.forEach(System.out::println);
+            // 1、表格数据转为类数据
+            studentExportList = ExcelImportUtil.importExcel(multipartFile.getInputStream(), StudentExport.class, importParams);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return studentService.importStudents(studentExportList);
     }
 }
