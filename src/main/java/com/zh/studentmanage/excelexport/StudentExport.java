@@ -8,6 +8,8 @@ import com.zh.studentmanage.enums.StatusEnum;
 import com.zh.studentmanage.utils.EnumUtil;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class StudentExport {
 
@@ -25,7 +27,7 @@ public class StudentExport {
      * 形如：2021-10-01
      */
     @Excel(name = "出生日期",format = "yyyy-mm-dd",width = 15)
-    private String birthday;
+    private LocalDate birthday;
     /**
      * 0-女；1-男
      */

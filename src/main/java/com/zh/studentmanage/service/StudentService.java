@@ -91,4 +91,11 @@ public interface StudentService {
      */
     List<StudentExport> export(Student student);
 
+    /**
+     * 通过表格数据进行导入
+     * @param  studentExportList  需要导入的数据
+     * @return 导入结果
+     */
+    ResponseVo<String> importStudents(List<StudentExport> studentExportList);
+
 }

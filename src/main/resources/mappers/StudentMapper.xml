@@ -99,12 +99,12 @@
                 #{homeaddress}, #{status}, #{updatedPerson})
     </insert>
 
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into studentmanage.student(name, nickname, password, birthday, gender, idCard, schoolid, phone,
+    <insert id="insertBatch">
+        insert into studentmanage.student(id, name, nickname, password, birthday, gender, idCard, schoolid, phone,
         homeAddress, status, created_time, updated_time, updated_person)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
+            (#{entity.id}, #{entity.name}, #{entity.nickname}, #{entity.password}, #{entity.birthday}, #{entity.gender},
             #{entity.idcard}, #{entity.schoolid}, #{entity.phone}, #{entity.homeaddress}, #{entity.status},
             #{entity.createdTime}, #{entity.updatedTime}, #{entity.updatedPerson})
         </foreach>
