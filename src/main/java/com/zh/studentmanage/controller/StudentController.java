@@ -5,14 +5,12 @@ import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.zh.studentmanage.enums.PageEnum;
 import com.zh.studentmanage.excelexport.StudentExport;
 import com.zh.studentmanage.pojo.Student;
 import com.zh.studentmanage.service.StudentService;
 import com.zh.studentmanage.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
@@ -34,7 +31,7 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/add")
-    public ResponseVo add(@RequestBody Student student) {
+    public ResponseVo<String> add(@RequestBody Student student) {
         return studentService.insert(student);
     }
 
